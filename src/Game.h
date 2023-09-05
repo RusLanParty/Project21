@@ -10,11 +10,12 @@ class Game
 {
 public:
 	Game(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font);
-	std::shared_ptr<sf::RenderWindow> GameWindow;
-	std::shared_ptr<sf::Font> Font;
-	std::shared_ptr<sf::Vector2f> curMousePosX;
+	static std::shared_ptr<sf::RenderWindow> GameWindow;
+	std::shared_ptr<sf::Font> Font;	
 	static bool bloom;
-private:
+	std::shared_ptr<Shaders> shaders;
+	std::shared_ptr<sf::RenderTexture> renderTexture;
+private:	
 	FPSCounter fpsCounter;
 	std::shared_ptr<Starfield> stars;
 	std::vector<std::shared_ptr<Bullet>> _bullets;
@@ -22,13 +23,14 @@ private:
 	std::shared_ptr<Player> player;
 	sf::Clock clock;
 	sf::Clock spawnTimer;
-	void mouse(float deltaTime, sf::Event event);
-	void mouseBounds();
+	void mouse(float deltaTime, sf::Event event);	
 	void mainLoop();
 	void handleInput(float deltaTime);
 	void keyboard(float deltaTime, sf::Event event);
 	void update(float deltaTime);
 	void draw(float deltaTime);
 	void dispose();
-	static bool leftPressed;	
+	static bool lefMousePressed;	
+	static bool keyPressedD;
+	static bool keyPressedA;
 };

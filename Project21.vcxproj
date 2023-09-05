@@ -133,9 +133,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Font Include="arial.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\FPSCounter.cpp" />
@@ -143,6 +140,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Settings.cpp" />
+    <ClCompile Include="src\Shaders.cpp" />
     <ClCompile Include="src\Star.cpp" />
     <ClCompile Include="src\Starfield.cpp" />
   </ItemGroup>
@@ -153,8 +151,20 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Settings.h" />
+    <ClInclude Include="src\Shaders.h" />
     <ClInclude Include="src\Star.h" />
     <ClInclude Include="src\Starfield.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\arial.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\player.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Add.frag" />
+    <None Include="Shaders\BloomX.frag" />
+    <None Include="Shaders\BloomY.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

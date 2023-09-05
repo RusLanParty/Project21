@@ -8,7 +8,7 @@ class Bullet
 public:
 	Bullet(std::shared_ptr<sf::Vector2f> spawnPos);
 	void updatePosition(float deltaTime);
-	void draw(std::shared_ptr<sf::RenderWindow> GameWindow);
+	void draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
 	bool isDead();
 private:
 	std::shared_ptr<sf::RectangleShape> _bullet;

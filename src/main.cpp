@@ -5,7 +5,7 @@
 void start() 
 {
     static std::shared_ptr<sf::Font> font = std::make_shared<sf::Font>();
-    if (!font->loadFromFile("arial.ttf"))
+    if (!font->loadFromFile("Fonts/arial.ttf"))
     {
         std::cout << "Error loading font" << "\n";
     }

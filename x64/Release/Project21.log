@@ -1,36 +1,7 @@
-﻿  Starfield.cpp
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(27,14): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(28,15): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(128,30): warning C4267: 'return': conversion from 'size_t' to 'uint32_t', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(230,44): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(230,35): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(230,26): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(232,44): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(232,35): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(232,22): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(234,44): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(234,35): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(234,22): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(236,44): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(236,31): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(236,22): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(238,44): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(238,31): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(238,22): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(240,44): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(240,35): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
-D:\Visual Studio\Repos\Project21\src\Starfield.cpp(240,26): warning C4244: 'argument': conversion from 'float' to 'sf::Uint8', possible loss of data
+﻿  Player.cpp
   Generating code
-  2 of 635 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  4 of 730 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Project21.vcxproj -> D:\Visual Studio\Repos\Project21\x64\Release\Project21.exe

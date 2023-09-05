@@ -6,68 +6,21 @@
 #include <iostream>
 #include <random>
 uint32_t Starfield::_starsCount = 500;
-Starfield::Starfield(std::shared_ptr<sf::RenderWindow> GameWindow):
-	renderTexture(),
-	xBlurShader(),
-	yBlurShader()
-	
-{
-	
-	if (!xBlurShader.loadFromFile("src/BloomX.frag", sf::Shader::Fragment))
-	{
-		std::cout << "Failed to load shader" << "\n";
-	}
-	if (!yBlurShader.loadFromFile("src/BloomY.frag", sf::Shader::Fragment))
-	{
-		std::cout << "Failed to load shader" << "\n";
-	}
+Starfield::Starfield(std::shared_ptr<sf::RenderWindow> GameWindow)
+{	
 
-	float sigma = 2.3f;
-	float glowMultiplier = 6.0f;
-	float width = GameWindow->getSize().x;
-	float height = GameWindow->getSize().y;
-
-	renderTexture.create(GameWindow->getSize().x, GameWindow->getSize().y);
-	
-	xBlurShader.setUniform("sigma", sigma);
-	xBlurShader.setUniform("glowMultiplier", glowMultiplier);
-	xBlurShader.setUniform("width", width);
-
-	yBlurShader.setUniform("sigma", sigma);
-	yBlurShader.setUniform("glowMultiplier", glowMultiplier);
-	yBlurShader.setUniform("height", height);
-	
 	createStarfield(GameWindow);
 }
 
-void Starfield::draw(std::shared_ptr<sf::RenderWindow> GameWindow)
+void Starfield::draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
 {
 	if (Game::bloom) 
-	{
-		renderTexture.setActive(true);
-		renderTexture.clear(sf::Color::Black);
-
+	{		
 		for (auto& star : _starfield)
 		{
-			renderTexture.draw(*star->_star);
+			renderTexture->draw(*star->_star);
 		}
-
-		sourceTexture = renderTexture.getTexture();
-		xBlurShader.setUniform("sourceTexture", sourceTexture);
-		yBlurShader.setUniform("sourceTexture", sourceTexture);
-
-		// Apply the blurX shader
-		sf::Sprite intermediateSprite(renderTexture.getTexture());
-		renderTexture.draw(intermediateSprite, &xBlurShader);
-
-		// Apply the blurY shader
-		renderTexture.draw(intermediateSprite, &yBlurShader);
-
-		// Draw the final result to the window
-		sf::Sprite finalSprite(renderTexture.getTexture());
-		GameWindow->draw(finalSprite);
-		renderTexture.clear();
-		renderTexture.setActive(false);
+		renderTexture->display();
 	}
 	else 
 	{
@@ -184,7 +137,7 @@ std::shared_ptr<sf::Vector2f> Starfield::getRandomAcceleration()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> distribution(0.4f, 1.0f);
+	std::uniform_real_distribution<float> distribution(0.4f, 1.1f);
 	float randomValue = distribution(gen);
 
 	// Adjust the distribution for bias
@@ -197,7 +150,7 @@ float Starfield::getRandomRadius()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.05f, 0.3f);
+	std::uniform_real_distribution<float> dis(0.05f, 0.2f);
 	float randRad = dis(gen);
 	return randRad;
 }
@@ -206,9 +159,9 @@ sf::Color Starfield::getRandomColor()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis1(180.0f, 360.0f);
-	std::uniform_real_distribution<float> dis2(0.01f, 0.4f);
-	std::uniform_real_distribution<float> dis3(0.001f, 0.25f);
+	std::uniform_real_distribution<float> dis1(0.0f, 360.0f);
+	std::uniform_real_distribution<float> dis2(0.01f, 0.7f);
+	std::uniform_real_distribution<float> dis3(0.01f, 0.5f);
 	float hue = dis1(gen);
 	float sat = dis2(gen);
 	float val = dis3(gen);
