@@ -5,21 +5,22 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Starfield.h"
+#include "EnemyFormation.h"
 #include <vector>
 class Game 
 {
 public:
-	Game(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font);
-	static std::shared_ptr<sf::RenderWindow> GameWindow;
+	Game(sf::RenderWindow* window, std::shared_ptr<sf::Font> font);
+	static sf::RenderWindow* GameWindow;
 	std::shared_ptr<sf::Font> Font;	
 	static bool bloom;
 	std::shared_ptr<Shaders> shaders;
 	std::shared_ptr<sf::RenderTexture> renderTexture;
 private:	
-	FPSCounter fpsCounter;
+	std::shared_ptr<FPSCounter> fpsCounter;
+	std::shared_ptr<EnemyFormation> formation;
 	std::shared_ptr<Starfield> stars;
-	std::vector<std::shared_ptr<Bullet>> _bullets;
-	std::vector <std::shared_ptr<Enemy>> _enemies;
+	std::vector<std::shared_ptr<Projectile>> projectiles;	
 	std::shared_ptr<Player> player;
 	sf::Clock clock;
 	sf::Clock spawnTimer;

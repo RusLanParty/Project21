@@ -56,7 +56,7 @@ std::shared_ptr<sf::Vector2f> Star::getAcceleration()
 	return std::shared_ptr<sf::Vector2f>(this->_acceleration);
 }
 
-bool Star::isDead(std::shared_ptr<sf::RenderWindow> GameWindow)
+bool Star::isDead(sf::RenderWindow* GameWindow)
 {
 	if (this->getPositionInMetersFromPixels()->y > GameWindow->getSize().y / Settings::getConversionFactor() + 0.1f) 
 	{

@@ -1,18 +1,7 @@
 #pragma once
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include "Settings.h"
-
-class Bullet 
+#include "Projectile.h"
+class Bullet : public Projectile
 {
 public:
 	Bullet(std::shared_ptr<sf::Vector2f> spawnPos);
-	void updatePosition(float deltaTime);
-	void draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
-	bool isDead();
-private:
-	std::shared_ptr<sf::RectangleShape> _bullet;
-	std::shared_ptr<sf::Vector2f> _velocity;
-	float _lifeTime;
-	
 };

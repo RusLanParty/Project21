@@ -1,8 +1,8 @@
 #include "Player.h"
 #include "Game.h"
 #include <iostream>
-float maxAcc = 25.0f * Settings::getConversionFactor();
-float maxSpeed = 1500.0f * Settings::getConversionFactor();
+float maxAcc = 20.0f;
+float maxSpeed = 10.0f;
 
 Player::Player(std::shared_ptr<sf::Vector2f> spawnPos)
 {
@@ -30,7 +30,7 @@ Player::Player(std::shared_ptr<sf::Vector2f> spawnPos)
 	}
 	player->setTexture(player_ship);
 	player->setRotation(270.0f);
-	player->setScale(0.4f, 0.4f);
+	player->setScale(0.35f, 0.35f);
 	player->setOrigin(player->getLocalBounds().getSize().x / 2, player->getLocalBounds().getSize().y / 2);
 	player->setPosition(*spawnPos);	
 	player->setColor(sf::Color::White);
@@ -38,26 +38,31 @@ Player::Player(std::shared_ptr<sf::Vector2f> spawnPos)
 
 void Player::updateMovement(float deltaTime)
 {	
+	// Conversion pixels/meters
+	float conv = Settings::getConversionFactor();
+
 	// Set new position
-	this->player->setPosition(this->player->getPosition() + *this->velocity * deltaTime);
-	this->acceleration->x = 0.0f;
+	sf::Vector2f newPos(this->getPositionM() + *this->velocity * deltaTime);
+	this->setPositionM(newPos);
 
 	// Check bounds
-	if (this->player->getPosition().x > Game::GameWindow->getSize().x - this->player->getLocalBounds().width * 0.1f)
+	if (this->getPositionM().x > Game::GameWindow->getSize().x / conv  - this->player->getLocalBounds().width * 0.1f / conv)
 	{
-		this->player->setPosition(Game::GameWindow->getSize().x - this->player->getLocalBounds().width * 0.1f, this->player->getPosition().y);
+		sf::Vector2f pos(Game::GameWindow->getSize().x / conv - this->player->getLocalBounds().width * 0.1f / conv, this->player->getPosition().y / conv);
+		this->setPositionM(pos);
 		this->velocity->x = 0.0f;
 		this->acceleration->x = 0.0f;
 	}
-	else if (this->player->getPosition().x < this->player->getLocalBounds().width * 0.1f)
+	else if (this->getPositionM().x < this->player->getLocalBounds().width * 0.1f / conv)
 	{
-		this->player->setPosition(this->player->getLocalBounds().width * 0.1f, this->player->getPosition().y);
+		sf::Vector2f pos(this->player->getLocalBounds().width * 0.1f / conv, this->player->getPosition().y / conv);
+		this->setPositionM(pos);
 		this->velocity->x = 0.0f;
 		this->acceleration->x = 0.0f;
-	}
+	}	
 }
 
-void Player::draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void Player::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
 {
 	//if (Game::bloom)
 	//{
@@ -73,16 +78,19 @@ void Player::draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_ptr<
 
 void Player::accelerate(std::shared_ptr<sf::Vector2f> acc, float deltaTime)
 {	
-	*this->acceleration += *acc * deltaTime;
-	if (this->acceleration->x > maxAcc || this->velocity->x > maxSpeed)
+	// Update acceleration
+	*this->acceleration += *acc;
+	if (this->acceleration->x > maxAcc)
 	{
 		this->acceleration->x = maxAcc;
 	}
-	else if (this->acceleration->x < -maxAcc || this->velocity->x < -maxSpeed)
+	else if (this->acceleration->x < -maxAcc)
 	{
 		this->acceleration->x = -maxAcc;
 	}
-	*this->velocity += *acceleration;
+
+	// Update velocity
+	*this->velocity += *acceleration * deltaTime;
 	if (this->velocity->x > maxSpeed)
 	{
 		this->velocity->x = maxSpeed;
@@ -95,6 +103,8 @@ void Player::accelerate(std::shared_ptr<sf::Vector2f> acc, float deltaTime)
 
 void Player::decelerate(std::shared_ptr<sf::Vector2f> dec, float deltaTime)
 {
+	this->acceleration->x = 0.0f;
+
 	if (this->velocity->x > 0.0f)
 	{
 		this->velocity->x -= dec->x * deltaTime;
@@ -115,7 +125,17 @@ void Player::decelerate(std::shared_ptr<sf::Vector2f> dec, float deltaTime)
 	}
 }
 
-std::shared_ptr<sf::Vector2f> Player::getVelocity()
+std::shared_ptr<sf::Vector2f> Player::getVelocity() const
 {
 	return this->velocity;
+}
+
+sf::Vector2f Player::getPositionM() const
+{
+	return this->player->getPosition() / Settings::getConversionFactor();
+}
+
+void Player::setPositionM(sf::Vector2f& pos)
+{
+	this->player->setPosition(pos * Settings::getConversionFactor());
 }

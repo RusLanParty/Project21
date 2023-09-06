@@ -11,7 +11,7 @@ public:
 	std::shared_ptr<sf::Vector2f> getPositionInMetersFromPixels();
 	void move(std::shared_ptr<sf::Vector2f> vector);
 	std::shared_ptr<sf::Vector2f> getAcceleration();
-	bool isDead(std::shared_ptr<sf::RenderWindow> GameWindow);
+	bool isDead(sf::RenderWindow* GameWindow);
 	std::shared_ptr<sf::CircleShape> _star;
 	bool speedUp;
 private:

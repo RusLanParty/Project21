@@ -5,23 +5,23 @@ bool Game::keyPressedA = false;
 bool Game::keyPressedD = false;
 bool Game::lefMousePressed = false;
 bool Game::bloom = true;
-std::shared_ptr <sf::RenderWindow> Game::GameWindow;
-float rateOfFire = 150.0f;
+sf::RenderWindow* Game::GameWindow;
+float rateOfFire = 100.0f;
 
-Game::Game(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font):
-Font(font),
-fpsCounter(0.0f, 0.0f, 150.0f, 0.0f, font)
+Game::Game(sf::RenderWindow* window, std::shared_ptr<sf::Font> font):
+Font(font)
 {
-    GameWindow = window;
-    // CONVERSION FACTOR (scale of the game)
-    Settings::setConversionFactor(20.0f);
+    // Create FPSCounter
+    fpsCounter = std::make_shared<FPSCounter>(0.0f, 0.0f, 150.0f, 0.0f, font);
 
-    // Temporary single enemy spawn on start up
-    //std::shared_ptr<sf::Vector2f> spawnEnemyPos = std::make_shared<sf::Vector2f>(500.0f, 500.0f);
-    //_enemies.push_back(std::make_shared<Enemy>(spawnEnemyPos));
+    //Init RenderWindow
+    GameWindow = window;
+
+    // CONVERSION FACTOR (scale of the game)
+    Settings::setConversionFactor(200.0f);
 
     // Spawn player in the center, hide cursor and start the game's main loop
-    std::shared_ptr<sf::Vector2f> playerSpawnPos = std::make_shared<sf::Vector2f>(GameWindow->getSize().x / 2 , GameWindow->getSize().y - 10.0f * Settings::getConversionFactor());
+    std::shared_ptr<sf::Vector2f> playerSpawnPos = std::make_shared<sf::Vector2f>(GameWindow->getSize().x / 2 , GameWindow->getSize().y - 1.0f * Settings::getConversionFactor());
     player = std::make_shared<Player>(playerSpawnPos);
     GameWindow->setMouseCursorVisible(false);
 
@@ -30,13 +30,18 @@ fpsCounter(0.0f, 0.0f, 150.0f, 0.0f, font)
 
     // Create starfield
     stars = std::make_shared<Starfield>(GameWindow);
-
+    
+    // Create a texture to render on for shader application
     renderTexture = std::make_shared<sf::RenderTexture>();
     if (!renderTexture->create(GameWindow->getSize().x, GameWindow->getSize().y))
     {
         std::cout << "GAME: FAILED TO CREATE RENDER TEXTURE";
     }
 
+    // Create EnemyFormation, the class that creates, spawns, moves, draws and despawns enemies
+    formation = std::make_shared<EnemyFormation>();
+
+    // Start the main game loop
 	mainLoop();
 }
 
@@ -86,26 +91,26 @@ void Game::handleInput(float deltaTime)
     // Shooting
     if (lefMousePressed && (spawnTimer.getElapsedTime().asMilliseconds() >= rateOfFire || spawnTimer.getElapsedTime().asMilliseconds() == 0))
     {
-        _bullets.push_back(std::make_shared<Bullet>(std::make_shared<sf::Vector2f>(player->player->getPosition())));    
+        projectiles.push_back(std::make_shared<Bullet>(std::make_shared<sf::Vector2f>(player->getPositionM())));    
         spawnTimer.restart();
     }
 
     // Movement
     if (keyPressedA && !keyPressedD) 
     {
-        std::shared_ptr<sf::Vector2f> acc = std::make_shared <sf::Vector2f>(-800.0f, 0.0f);
+        std::shared_ptr<sf::Vector2f> acc = std::make_shared <sf::Vector2f>(-5.0f, 0.0f);
         player->accelerate(acc, deltaTime);
     }
     else if (keyPressedD && !keyPressedA) 
     {
-        std::shared_ptr<sf::Vector2f> acc = std::make_shared <sf::Vector2f>(800.0f, 0.0f);
+        std::shared_ptr<sf::Vector2f> acc = std::make_shared <sf::Vector2f>(5.0f, 0.0f);
         player->accelerate(acc, deltaTime);
     }
     else
     {
         // Apply deceleration when no keys are pressed
-        std::shared_ptr<sf::Vector2f> acc = std::make_shared <sf::Vector2f>(800.0f, 0.0f);
-        player->decelerate(acc, deltaTime);
+        std::shared_ptr<sf::Vector2f> dec = std::make_shared <sf::Vector2f>(20.0f, 0.0f);
+        player->decelerate(dec, deltaTime);
     }
 }
 
@@ -113,11 +118,13 @@ void Game::keyboard(float deltaTime, sf::Event event)
 {
     if (event.type == event.KeyPressed) 
     {
+        // Exit
         if (event.key.code == sf::Keyboard::Escape) 
-        {
-            std::cout << "Closed by user" << "\n";
+        {            
             GameWindow->close();
+            delete GameWindow;            
         }
+        // Toggle bloom shader
         else if (event.key.code == sf::Keyboard::B) 
         {
             bloom = !bloom;
@@ -154,14 +161,18 @@ void Game::update(float deltaTime)
     // Update player
     player->updateMovement(deltaTime);
 
-    // Update bullets
-    for (auto& bulletPtr : _bullets) 
+    // Update projectiles, check if they hit someone
+    for (auto& projectilePtr : projectiles) 
     {
-        bulletPtr->updatePosition(deltaTime);
+        projectilePtr->updatePosition(deltaTime);
+        formation->checkProjectileCollision(projectilePtr);
     }
 
+    // Update enemies
+    formation->updateFormation(deltaTime);
+
     // Update FPS counter
-    fpsCounter.displayFps(deltaTime);
+    fpsCounter->displayFps(deltaTime);
 }
 
 void Game::draw(float deltaTime)
@@ -175,8 +186,8 @@ void Game::draw(float deltaTime)
         // Draw starfield
         stars->draw(GameWindow, renderTexture);
 
-        // Draw bullets (NEEDS FIX)
-        for (auto& bulletPtr : _bullets)
+        // Draw bullets
+        for (auto& bulletPtr : projectiles)
         {
             bulletPtr->draw(GameWindow, renderTexture);
         }
@@ -184,7 +195,7 @@ void Game::draw(float deltaTime)
         // Apply bloom
         if (bloom)
         {
-            shaders->applyBloom(renderTexture);
+            shaders->applyBloom(renderTexture, GameWindow);
         }        
 
     // Draw no bloom
@@ -193,34 +204,33 @@ void Game::draw(float deltaTime)
         player->draw(GameWindow, renderTexture);
 
         // Draw enemies
-        for (auto& enemyPtr : _enemies) 
-        {
-            enemyPtr->draw(GameWindow);
-        }
+        formation->draw(GameWindow);
 
         // Draw fps counter
-        fpsCounter.draw(GameWindow);
+        fpsCounter->draw(GameWindow);
     GameWindow->display();
 }
 
 void Game::dispose()
 {
     // Despawn bullets
-    auto it = _bullets.begin();
-    while (it != _bullets.end())
+    auto it = projectiles.begin();
+    while (it != projectiles.end())
     {
         if ((*it)->isDead())
         {
-            // Release ownership by resetting the shared_ptr (if you haven't already).
             (*it).reset();            
 
-            // Remove the element from the vector and advance the iterator.
-            it = _bullets.erase(it);
+            // Remove the element from the vector and advance the iterator
+            it = projectiles.erase(it);
         }
         else
         {
-            // Move to the next element.
+            // Move to the next element
             ++it;
         }
     }
+
+    // Despawn dead enemies
+    formation->despawnDead();
 }

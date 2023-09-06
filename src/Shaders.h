@@ -3,10 +3,9 @@
 class Shaders 
 {
 public:
-	Shaders(std::shared_ptr<sf::RenderWindow> window);
-	void applyBloom(std::shared_ptr<sf::RenderTexture> renderTexture);
-private:
-	std::shared_ptr<sf::RenderWindow> GameWindow;
+	Shaders(sf::RenderWindow* GameWindow);
+	void applyBloom(std::shared_ptr<sf::RenderTexture> renderTexture, sf::RenderWindow* GameWindow);
+private:	
 	sf::Shader bloomX;
 	sf::Shader bloomY;
 	sf::Shader add;

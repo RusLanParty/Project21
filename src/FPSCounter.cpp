@@ -133,7 +133,7 @@ void FPSCounter::normalizeHSV()
 	}
 }
 
-void FPSCounter::draw(std::shared_ptr<sf::RenderWindow> window)
+void FPSCounter::draw(sf::RenderWindow* window)
 {
 	window->draw(*_fpsText);
 	window->draw(*_objectsText);

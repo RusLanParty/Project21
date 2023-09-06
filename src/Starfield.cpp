@@ -5,14 +5,13 @@
 #include "SFML/Graphics/Shader.hpp"
 #include <iostream>
 #include <random>
-uint32_t Starfield::_starsCount = 500;
-Starfield::Starfield(std::shared_ptr<sf::RenderWindow> GameWindow)
+uint32_t Starfield::_starsCount = 100;
+Starfield::Starfield(sf::RenderWindow* GameWindow)
 {	
-
 	createStarfield(GameWindow);
 }
 
-void Starfield::draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void Starfield::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
 {
 	if (Game::bloom) 
 	{		
@@ -31,7 +30,7 @@ void Starfield::draw(std::shared_ptr<sf::RenderWindow> GameWindow, std::shared_p
 	}
 }
 
-void Starfield::updateStars(std::shared_ptr<sf::RenderWindow> GameWindow, float deltaTime)
+void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
 {
 	// Move stars
 	for (auto& star : _starfield) 
@@ -81,7 +80,7 @@ uint32_t Starfield::getCurrentStarsCount()
 	return this->_starfield.size();
 }
 
-void Starfield::createStarfield(std::shared_ptr<sf::RenderWindow> GameWindow)
+void Starfield::createStarfield(sf::RenderWindow* GameWindow)
 {
 	for (uint32_t i = 0; i < _starsCount; i++) 
 	{
@@ -94,7 +93,7 @@ void Starfield::createStarfield(std::shared_ptr<sf::RenderWindow> GameWindow)
 	}
 }
 
-std::shared_ptr<sf::Vector2f> Starfield::getRandomPosition(std::shared_ptr<sf::RenderWindow> GameWindow)
+std::shared_ptr<sf::Vector2f> Starfield::getRandomPosition(sf::RenderWindow* GameWindow)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -106,7 +105,7 @@ std::shared_ptr<sf::Vector2f> Starfield::getRandomPosition(std::shared_ptr<sf::R
 	return randPos;
 }
 
-std::shared_ptr<sf::Vector2f> Starfield::getRandomPositionOutOfBounds(std::shared_ptr<sf::RenderWindow> GameWindow)
+std::shared_ptr<sf::Vector2f> Starfield::getRandomPositionOutOfBounds(sf::RenderWindow* GameWindow)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -150,7 +149,7 @@ float Starfield::getRandomRadius()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.05f, 0.2f);
+	std::uniform_real_distribution<float> dis(0.005f, 0.02f);
 	float randRad = dis(gen);
 	return randRad;
 }

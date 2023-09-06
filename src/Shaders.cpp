@@ -1,9 +1,8 @@
 #include "Shaders.h"
 #include <iostream>
 
-Shaders::Shaders(std::shared_ptr<sf::RenderWindow> window):
-    GameWindow(window)
-{
+Shaders::Shaders(sf::RenderWindow* window)
+{    
     // Load shaders
     if (!bloomX.loadFromFile("Shaders/BloomX.frag", sf::Shader::Fragment))
     {
@@ -33,8 +32,8 @@ Shaders::Shaders(std::shared_ptr<sf::RenderWindow> window):
     // setUniforms
     float sigma = 10.0f;
     float glowMultiplier = 2.0f;
-    float width = GameWindow->getSize().x;
-    float height = GameWindow->getSize().y;
+    float width = window->getSize().x;
+    float height = window->getSize().y;
 
     bloomX.setUniform("sigma", sigma);
     bloomX.setUniform("glowMultiplier", glowMultiplier);
@@ -45,7 +44,7 @@ Shaders::Shaders(std::shared_ptr<sf::RenderWindow> window):
     bloomY.setUniform("height", height);    
 }
 
-void Shaders::applyBloom(std::shared_ptr<sf::RenderTexture> xRenderTexture)
+void Shaders::applyBloom(std::shared_ptr<sf::RenderTexture> xRenderTexture, sf::RenderWindow* GameWindow)
 { 
     // Create temp textures
     sf::RenderTexture tempTexture;
