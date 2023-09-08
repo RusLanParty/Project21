@@ -3,5 +3,5 @@
 class Bullet : public Projectile
 {
 public:
-	Bullet(std::shared_ptr<sf::Vector2f> spawnPos);
+	Bullet(sf::Vector2f spawnPos);
 };

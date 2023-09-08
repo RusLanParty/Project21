@@ -142,7 +142,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\ColorConverter.cpp" />
+    <ClCompile Include="src\EnemyBullet.cpp" />
     <ClCompile Include="src\EnemyFormation.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
+    <ClCompile Include="src\ParticleEffects.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\FPSCounter.cpp" />
@@ -156,7 +160,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Bullet.h" />
+    <ClInclude Include="src\ColorConverter.h" />
+    <ClInclude Include="src\EnemyBullet.h" />
     <ClInclude Include="src\EnemyFormation.h" />
+    <ClInclude Include="src\Particle.h" />
+    <ClInclude Include="src\ParticleEffects.h" />
     <ClInclude Include="src\Projectile.h" />
     <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\FPSCounter.h" />

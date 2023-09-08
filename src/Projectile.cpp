@@ -10,8 +10,8 @@ Projectile::Projectile():
 
 void Projectile::updatePosition(float deltaTime)
 {
-	std::shared_ptr<sf::Vector2f> newPos = std::make_shared<sf::Vector2f>(this->_projectile->getPosition().x + this->_velocity->x * Settings::getConversionFactor() * deltaTime, this->_projectile->getPosition().y + this->_velocity->y * Settings::getConversionFactor() * deltaTime);
-	this->_projectile->setPosition(*newPos);
+	sf::Vector2f newPos(this->_projectile->getPosition().x + this->_velocity->x * Settings::getConversionFactor() * deltaTime, this->_projectile->getPosition().y + this->_velocity->y * Settings::getConversionFactor() * deltaTime);
+	this->_projectile->setPosition(newPos);
 	this->_lifeTime -= 1.0f * deltaTime;
 }
 
@@ -33,6 +33,11 @@ int Projectile::getDamage()
 	return this->_damage;
 }
 
+int Projectile::getTeam()
+{
+	return this->_team;
+}
+
 bool Projectile::isDead()
 {
 	return this->_lifeTime <= 0;
@@ -41,4 +46,14 @@ bool Projectile::isDead()
 void Projectile::kill()
 {
 	this->_lifeTime = 0;
+}
+
+sf::Vector2f Projectile::getPositionM()
+{
+	return this->_projectile->getPosition() / Settings::getConversionFactor();
+}
+
+sf::FloatRect Projectile::getGlobalBounds()
+{
+	return this->_projectile->getGlobalBounds();
 }

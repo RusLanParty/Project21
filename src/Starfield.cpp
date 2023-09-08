@@ -149,7 +149,7 @@ float Starfield::getRandomRadius()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.005f, 0.02f);
+	std::uniform_real_distribution<float> dis(0.005f, 0.015f);
 	float randRad = dis(gen);
 	return randRad;
 }
@@ -159,8 +159,8 @@ sf::Color Starfield::getRandomColor()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dis1(0.0f, 360.0f);
-	std::uniform_real_distribution<float> dis2(0.01f, 0.7f);
-	std::uniform_real_distribution<float> dis3(0.01f, 0.5f);
+	std::uniform_real_distribution<float> dis2(0.01f, 0.4f);
+	std::uniform_real_distribution<float> dis3(0.05f, 0.4f);
 	float hue = dis1(gen);
 	float sat = dis2(gen);
 	float val = dis3(gen);

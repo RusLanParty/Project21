@@ -37,13 +37,13 @@ void FPSCounter::displayFps(float deltaTime)
 	}
 }
 
-void FPSCounter::displayOjbectCount(int objCount)
+void FPSCounter::displayOjbectCount(int _objCount)
 {
 	_frameCounter1++;
 	if (_frameCounter1 == _deltaFrames1)
 	{
 		_frameCounter1 = 0;
-		int objCount = objCount;
+		int objCount = _objCount;
 		_objectsText->setString("OBJECTS COUNT: " + std::to_string(static_cast<int>(objCount)));
 	}
 }
