@@ -34,7 +34,7 @@ private:
 	void update(float deltaTime);
 	void draw(float deltaTime);
 	void dispose();
-	static bool lefMousePressed;	
+	static bool spacePressed;	
 	static bool keyPressedD;
 	static bool keyPressedA;
 };

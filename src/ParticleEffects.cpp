@@ -21,7 +21,7 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius, f
 
 		// Add to _particles
 		float lifeTime = 1.0f;		
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, hue, 0.5f, val, lifeTime));
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, hue, 0.0f, val, lifeTime));
 	}
 }
 void ParticleEffects::createSparks(const sf::Vector2f& position, float radius)
@@ -42,13 +42,13 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius)
 
 		// Add to _particles
 		float lifeTime = 1.0f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, 50.0f, 0.3f, 1.0f, lifeTime));
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, 50.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
 
 void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius)
 {
-	int amount = 500;
+	int amount = 600;
 
 	for (int i = 0; i < amount; i++)
 	{
@@ -64,7 +64,7 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 
 		// Add to _particles				
 		float lifeTime = 3.0f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 9.0f, 40.0f, 0.7f, 1.0f, lifeTime));
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.07f, 35.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
 
@@ -111,7 +111,7 @@ float ParticleEffects::getRandomSpeed()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.1f, 4.0f);
+	std::uniform_real_distribution<float> dis(0.1f, 20.0f);
 	float randSpeed = dis(gen);
 	return randSpeed;;
 }

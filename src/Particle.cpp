@@ -13,8 +13,8 @@ Particle::Particle(const sf::Vector2f& position, const sf::Vector2f& velocity, f
 	// Random radius
 	float radius = getRandomRadiusM();
 
-	// Damage * radius
-	_damage = damage * radius / 3;
+	// Damage
+	_damage = damage;
 
 	// Create shape
 	_particle = std::make_shared<sf::CircleShape>(radius, 4);
@@ -46,12 +46,21 @@ void Particle::update(float deltaTime)
 
 	// Update lifetime and opacity
 	float delta = std::sqrt(this->_velocity->x * this->_velocity->x + this->_velocity->y * this->_velocity->y);
-	this->_lifeTime -= 1.0f * deltaTime * delta;
-	this->_lifeTime -= 0.5f * deltaTime;
-	this->_val = this->_lifeTime;
+	this->_lifeTime -= deltaTime * (delta + 0.5f);	
+	this->_val = this->_lifeTime + 0.3f;
 
 	// Particle radius decrease
 	float newRad = this->_particle->getRadius() - 2 * deltaTime;
+
+	// Decrease velocity
+	float minSpeed = 0.04f * Settings::getConversionFactor();
+	float decayFactor = 0.15f * Settings::getConversionFactor(); 
+	sf::Vector2f currentVelocity = *this->_velocity;
+	float currentSpeed = delta;
+	if (currentSpeed > minSpeed) 
+	{
+		*this->_velocity *= std::pow(decayFactor, deltaTime);
+	}	
 
 	// Clamp the radius
 	if (newRad <= 0.001f) 
@@ -63,7 +72,13 @@ void Particle::update(float deltaTime)
 	// Darken color
 	if (this->_hue > 15.0f) 
 	{
-		_hue -= 100 * delta * deltaTime;
+		_hue -= 30 * delta * deltaTime;
+	}
+
+	// Increase saturation
+	if (this->_sat < 0.5f)
+	{
+		_sat += delta * deltaTime;		
 	}
 
 	// Clamp value
@@ -112,8 +127,10 @@ sf::FloatRect Particle::getBounds()
 
 float Particle::getDamage(float deltaTime)
 {
-	float delta = this->_velocity->x * this->_velocity->x + this->_velocity->y * this->_velocity->y;
-	return this->_damage * delta * deltaTime;
+	float delta = std::sqrt(this->_velocity->x * this->_velocity->x + this->_velocity->y * this->_velocity->y);
+	float dmg = this->_damage * delta;	
+	
+	return dmg;
 }
 
 bool Particle::isDead()
@@ -125,7 +142,7 @@ float Particle::getRandomRadiusM()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.005f * Settings::getConversionFactor(), 0.03f * Settings::getConversionFactor());
+	std::uniform_real_distribution<float> dis(0.02f * Settings::getConversionFactor(), 0.06f * Settings::getConversionFactor());
 	float randRad = dis(gen);
 	return randRad;
 }

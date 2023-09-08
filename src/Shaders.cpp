@@ -30,8 +30,8 @@ Shaders::Shaders(sf::RenderWindow* window)
     }
 
     // Set uniforms
-    float sigma = 15.0f;
-    float glowMultiplier = 1.2f;
+    float sigma = 6.0f;
+    float glowMultiplier = 1.0f;
     float width = window->getSize().x;
     float height = window->getSize().y;
 

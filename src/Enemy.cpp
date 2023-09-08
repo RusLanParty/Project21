@@ -5,7 +5,7 @@
 #include <random>
 #include <iostream>
 
-float normalVal = 0.05f;
+float normalVal = 0.1f;
 float minVal = 0.01f;
 float valOffset = 1.5f;
 
@@ -22,7 +22,7 @@ Enemy::Enemy(sf::Vector2f& spawnPos, int type):
 		_health = 100.0f;
 		break;
 	case 2:
-		_health = 250.0f;
+		_health = 200.0f;
 		break;
 	case 3:
 		_health = 300.0f;
@@ -30,7 +30,7 @@ Enemy::Enemy(sf::Vector2f& spawnPos, int type):
 	}
 	_shootThreshold = 5.0f;
 	_velocity = std::make_shared<sf::Vector2f>(0.0f, 0.0f);
-	sf::Vector2f size(0.4f * Settings::getConversionFactor(), 0.2f * Settings::getConversionFactor());
+	sf::Vector2f size(1.0f * Settings::getConversionFactor(), 0.4f * Settings::getConversionFactor());
 	_enemy = std::make_shared<sf::RectangleShape>(size);
 	_enemy->setOrigin(_enemy->getLocalBounds().getSize().x / 2, _enemy->getLocalBounds().getSize().y / 2);
 

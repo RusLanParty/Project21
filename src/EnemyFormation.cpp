@@ -8,20 +8,27 @@ EnemyFormation::EnemyFormation(std::shared_ptr<std::vector<std::vector<int>>> fo
 {
     const auto& layout = *formationLayout;
 
-    // Calculate the total width of the formation based on columns, enemy width, and spacing
-    float totalFormationWidth = layout[0].size() * (50.0f + 50.0f) - 50.0f;
+    float spaceX = 0.6f;
+    float spaceY = 0.7f;
+
+    // Get the conversion factor
+    float conversionFactor = Settings::getConversionFactor();
+
+    // Calculate the total width of the formation based on columns, enemy width, and spacing (in meters)
+    float totalFormationWidth = layout[0].size() * (spaceX * conversionFactor + spaceX * conversionFactor) - spaceX * conversionFactor;
 
     // Calculate the horizontal offset to center the formation
     float offsetX = (Game::GameWindow->getSize().x - totalFormationWidth) / 2.0f;
 
     // Offset from the top
-    sf::Vector2f offset(offsetX, 50.0f);
+    sf::Vector2f offset(offsetX, spaceX * conversionFactor);
 
     for (size_t row = 0; row < layout.size(); ++row)
     {
         for (size_t col = 0; col < layout[row].size(); ++col)
         {
-            sf::Vector2f enemyPosition = offset + sf::Vector2f(col * (50.0 + 50.0), row * 50.0);
+            // Calculate enemy positions using the conversion factor
+            sf::Vector2f enemyPosition = offset + sf::Vector2f(col * (spaceX * conversionFactor + spaceX * conversionFactor), row * spaceY * conversionFactor);
             _spawnQue.emplace(std::make_shared<Enemy>(enemyPosition, layout[row][col]));
         }
     }
@@ -65,7 +72,7 @@ void EnemyFormation::checkParticleCollision(float deltaTime)
                     if (enemyPtr->isHit(particle))
                     {
                         particle->kill();
-                        enemyPtr->applyDamage(particle->getDamage(deltaTime));
+                        enemyPtr->applyDamage(particle->getDamage(deltaTime));                        
 
                         // ININITE RECURSION
                         //ParticleEffects::createSparks(particle->getPositionM(), 5.0f);
@@ -134,7 +141,7 @@ void EnemyFormation::updateFormation(float deltaTime, std::vector<std::shared_pt
                 enemyPtr->invertXVelocity();
                 reverse = false;
             }
-            this->moveDown();
+            //this->moveDown();
         }
     }
 }

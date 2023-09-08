@@ -13,7 +13,7 @@ Player::Player(std::shared_ptr<sf::Vector2f> spawnPos):
 
 	// Velocity & acceleration vectors
 	velocity = std::make_shared<sf::Vector2f>(0.0f, 0.0f);
-	acceleration = std::make_shared<sf::Vector2f>(0.0f, -1.0f);
+	acceleration = std::make_shared<sf::Vector2f>(0.0f, 0.0f);
 
 	// Load player texture
 	if (!playerTexture.loadFromFile("Assets/player.png"))
@@ -26,12 +26,12 @@ Player::Player(std::shared_ptr<sf::Vector2f> spawnPos):
 	}
 	player->setTexture(playerTexture);
 	player->setRotation(270.0f);
-	player->setScale(0.35f, 0.35f);
+	player->setScale(0.3f, 0.3f);
 	player->setOrigin(player->getLocalBounds().getSize().x / 2, player->getLocalBounds().getSize().y / 2);
 	player->setPosition(*spawnPos);	
 
 	// Darken texture
-	sf::Color darkColor(40.0f, 40.0f, 40.0f);
+	sf::Color darkColor(45.0f, 45.0f, 45.0f);
 	player->setColor(darkColor);
 }
 
