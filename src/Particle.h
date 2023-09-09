@@ -16,8 +16,8 @@ public:
 	bool isDead();
 	void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
 private:
-	std::shared_ptr<sf::Vector2f> _velocity;
-	std::shared_ptr<sf::CircleShape> _particle;
+	sf::Vector2f _velocity;
+	sf::CircleShape _particle;
 	float _lifeTime;
 	float _hue;
 	float _sat;

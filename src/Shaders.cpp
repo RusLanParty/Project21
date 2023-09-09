@@ -1,9 +1,11 @@
 #include "Shaders.h"
 #include <iostream>
+sf::Shader Shaders::bloomX;
+sf::Shader Shaders::bloomY;
+sf::Shader Shaders::add;
 
-Shaders::Shaders(sf::RenderWindow* window)
+void Shaders::loadShaders()
 {
-    // Load shaders
     if (!bloomX.loadFromFile("Shaders/BloomX.frag", sf::Shader::Fragment))
     {
         std::cout << "SHADERS: Failed to load BloomX.frag" << "\n";
@@ -30,10 +32,10 @@ Shaders::Shaders(sf::RenderWindow* window)
     }
 
     // Set uniforms
-    float sigma = 6.0f;
-    float glowMultiplier = 1.0f;
-    float width = window->getSize().x;
-    float height = window->getSize().y;
+    float sigma = 3.0f;
+    float glowMultiplier = 1.5f;
+    float width = Game::GameWindow->getSize().x;
+    float height = Game::GameWindow->getSize().y;
 
     bloomX.setUniform("sigma", sigma);
     bloomX.setUniform("glowMultiplier", glowMultiplier);
@@ -57,7 +59,7 @@ void Shaders::applyBloom(std::shared_ptr<sf::RenderTexture> xRenderTexture, sf::
     }
     if (!yRenderTexture.create(GameWindow->getSize().x, GameWindow->getSize().y))
     {
-        std::cout << "SHADERS: failed to create yRenderTexture" << "\n";
+       std::cout << "SHADERS: failed to create yRenderTexture" << "\n";
     }
     
     bloomX.setUniform("sourceTexture", sourceTexture);
@@ -74,16 +76,11 @@ void Shaders::applyBloom(std::shared_ptr<sf::RenderTexture> xRenderTexture, sf::
     add.setUniform("source", xRenderTexture->getTexture());
     add.setUniform("bloom", yRenderTexture.getTexture());    
     tempTexture.draw(sprite, &add);
-    
-    // Add to original frame
-    add.setUniform("bloom", tempTexture.getTexture());
-    add.setUniform("source", sourceTexture);
-    tempTexture.draw(sprite, &add);
-    //tempTexture.display();
 
     // Draw final result to window
     sprite.setTexture(tempTexture.getTexture());
     GameWindow->draw(sprite);
+    xRenderTexture->clear(sf::Color::Transparent);
 }
 
 void Shaders::applyAddition(std::shared_ptr<sf::RenderTexture> xRenderTexture, std::shared_ptr<sf::RenderTexture> xRenderTexture1, sf::RenderWindow* GameWindow)
@@ -105,4 +102,5 @@ void Shaders::applyAddition(std::shared_ptr<sf::RenderTexture> xRenderTexture, s
     // Draw final result to window
     sprite.setTexture(tempTexture.getTexture());
     GameWindow->draw(sprite);
+    xRenderTexture->clear(sf::Color::Transparent);
 }

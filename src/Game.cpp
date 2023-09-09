@@ -1,42 +1,40 @@
-#include "FPSCounter.h"
 #include "Game.h"
-#include "Player.h"
 sf::RenderWindow* Game::GameWindow;
-bool Game::keyPressedA = false;
-bool Game::keyPressedD = false;
-bool Game::spacePressed = false;
+bool keyPressedA = false;
+bool keyPressedD = false;
+bool primaryPressed = false;
+bool secondaryPressed = false;
 bool Game::bloom = true;
 bool playerHidden = false;
-float rateOfFire = 150.0f;
-bool isIntro = true;
+float primaryRateOfFire = 150.0f;
+float secondaryRateOfFire = 1500.0f;
+bool Game::isIntro = false;
+std::shared_ptr<sf::RenderTexture> Game::renderTexture = std::make_shared<sf::RenderTexture>();
+std::shared_ptr<sf::RenderTexture> Game::renderTexture1 = std::make_shared<sf::RenderTexture>();
 
-Game::Game(sf::RenderWindow* window, std::shared_ptr<sf::Font> font):
+Game::Game(sf::RenderWindow* window, sf::Font* font):
 Font(font)
 {
     // CONVERSION FACTOR (scale of the game)
     Settings::setConversionFactor(100.0f);
 
     // Create FPSCounter
-    fpsCounter = std::make_shared<FPSCounter>(0.0f, 0.0f, 150.0f, 0.0f, font);
+    FPSCounter::init(0.0f, 0.0f, 150.0f, 0.0f, font);
 
     //Init RenderWindow
     GameWindow = window;
 
     // Init shaders
-    shaders = std::make_shared<Shaders>(GameWindow);
+    Shaders::loadShaders();
     
-    // Create starfield
-    stars = std::make_shared<Starfield>(GameWindow);
-    
+    // Create a starfield
+    Starfield::createStarfield(GameWindow);
+
     // Create a texture to render on for shader application
-    renderTexture = std::make_shared<sf::RenderTexture>();
     if (!renderTexture->create(GameWindow->getSize().x, GameWindow->getSize().y))
     {
         std::cout << "GAME: FAILED TO CREATE RENDER TEXTURE";
-    }
-
-    // Create a texture to render on for shader application
-    renderTexture1 = std::make_shared<sf::RenderTexture>();
+    }    
     if (!renderTexture1->create(GameWindow->getSize().x, GameWindow->getSize().y))
     {
         std::cout << "GAME: FAILED TO CREATE RENDER TEXTURE";
@@ -49,7 +47,7 @@ Font(font)
     std::vector<std::vector<int>> formation1 = {
         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, // Row 1
         {3, 0, 1, 0, 1, 0, 2, 2, 2, 0, 1, 0, 1, 0, 3}, // Row 2
-        {3, 3, 1 ,3, 1, 3, 2, 2, 2, 3, 1, 3, 1 ,3 ,3}, // Row 3
+        {3, 3, 3 ,3, 3, 3, 2, 2, 2, 3, 3, 3, 3 ,3 ,3}, // Row 3
         {3, 0, 1, 0, 1, 0, 2, 2, 2, 0, 1, 0, 1, 0, 3}, // Row 4
         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}  // Row 5
     };    
@@ -60,9 +58,7 @@ Font(font)
     // Spawning the formation
     formation = std::make_shared<EnemyFormation>(formationPtr);
 
-    // Spawn player in the center, hide cursor and start the game's main loop
-    std::shared_ptr<sf::Vector2f> playerSpawnPos = std::make_shared<sf::Vector2f>(GameWindow->getSize().x / 2, GameWindow->getSize().y + 3.0f * Settings::getConversionFactor());
-    player = std::make_shared<Player>(playerSpawnPos);
+    // Hide cursor
     GameWindow->setMouseCursorVisible(false);
 
     // Start the main game loop
@@ -75,29 +71,46 @@ void Game::mainLoop()
     {
         // Time it took to calculate the frame
         float deltaTime = clock.restart().asSeconds();
-        if (isIntro)
-        {
-            intro(deltaTime);
+
+        // Menu
+        if (Menu::isActive())
+        {     
+            Menu::menuLoop();
         }
-        handleInput(deltaTime);
-        update(deltaTime);
-        draw(deltaTime);
-        dispose();
+        
+        // Game loop
+        else 
+        {                        
+            if (Game::isIntro)
+            {
+                intro(deltaTime);
+            }
+
+            handleInput(deltaTime);
+            update(deltaTime);
+            draw(deltaTime);
+            dispose();
+        }
     }
 }
 
 void Game::intro(float deltaTime)
-{
-    float offsetY = GameWindow->getSize().y / 90;
-    if(player->getPositionM().y * Settings::getConversionFactor() >= GameWindow->getSize().y -  offsetY)
+{    
+    float offsetY = GameWindow->getSize().y / 10;
+    if(Player::getPositionM().y * Settings::getConversionFactor() >= GameWindow->getSize().y -  offsetY)
     {
-        sf::Vector2f acc(0.0f, -3.0f);
-        player->accelerate(acc, deltaTime);
+        sf::Vector2f acc(0.0f, -0.5f);
+        Player::accelerate(acc, deltaTime);
     }
+
     else 
     {
-        sf::Vector2f acc(0.0f, 10.0f);
-        player->decelerate(acc, deltaTime);
+        sf::Vector2f dec(0.0f, 2.0f);
+        Player::decelerate(dec, deltaTime);
+        if (Player::getVelocity().y >= 0.0f)
+        {            
+            isIntro = false;            
+        }
     }
 }
 
@@ -108,14 +121,22 @@ void Game::mouse(float deltaTime, sf::Event event)
     {
         if (event.key.code == sf::Mouse::Left) 
         {
-            spacePressed = true;
+            primaryPressed = true;
+        }
+        else if (event.key.code == sf::Mouse::Right)
+        {
+            secondaryPressed = true;
         }
     }
     if (event.type == event.MouseButtonReleased) 
     {
         if (event.key.code == sf::Mouse::Left) 
         {
-            spacePressed = false;
+            primaryPressed = false;
+        }
+        else if (event.key.code == sf::Mouse::Right)
+        {
+            secondaryPressed = false;
         }
     }
 }
@@ -126,35 +147,45 @@ void Game::handleInput(float deltaTime)
     sf::Event event;
     while (GameWindow->pollEvent(event))
     {
-        keyboard(deltaTime, event);
-        mouse(deltaTime, event);
+        if (!Game::isIntro) 
+        {
+            keyboard(deltaTime, event);
+            mouse(deltaTime, event);
+        }
     }
 
     // Respond to events
     
-    // Shooting
-    if (spacePressed && (spawnTimer.getElapsedTime().asMilliseconds() >= rateOfFire || spawnTimer.getElapsedTime().asMilliseconds() == 0))
+    // Shooting primary
+    if (primaryPressed && !secondaryPressed && (primaryFireTimer.getElapsedTime().asMilliseconds() >= primaryRateOfFire || primaryFireTimer.getElapsedTime().asMilliseconds() == 0))
     {
-        projectiles.push_back(player->shoot((player->getPositionM())));    
-        spawnTimer.restart();
+        projectiles.push_back(Player::shootPrimary((Player::getPositionM())));
+        primaryFireTimer.restart();
+    }
+
+    // Shooting secondary
+    if (secondaryPressed && !primaryPressed && (secondaryFireTimer.getElapsedTime().asMilliseconds() >= secondaryRateOfFire || secondaryFireTimer.getElapsedTime().asMilliseconds() == 0))
+    {
+        projectiles.push_back(Player::shootSecondary((Player::getPositionM())));
+        secondaryFireTimer.restart();
     }
 
     // Movement
     if (keyPressedA && !keyPressedD) 
     {
         sf::Vector2f acc(-9.0f, 0.0f);
-        player->accelerate(acc, deltaTime);
+        Player::accelerate(acc, deltaTime);
     }
     else if (keyPressedD && !keyPressedA) 
     {
         sf::Vector2f acc(9.0f, 0.0f);
-        player->accelerate(acc, deltaTime);
+        Player::accelerate(acc, deltaTime);
     }
     else
     {
         // Apply deceleration when no keys are pressed
         sf::Vector2f dec(10.0f, 0.0f);
-        player->decelerate(dec, deltaTime);
+        Player::decelerate(dec, deltaTime);
     }
 }
 
@@ -188,7 +219,7 @@ void Game::keyboard(float deltaTime, sf::Event event)
         // Shoot
         if (event.key.code == sf::Keyboard::Space)
         {
-            spacePressed = true;
+            primaryPressed = true;
         }
 
     }
@@ -204,7 +235,7 @@ void Game::keyboard(float deltaTime, sf::Event event)
         }
         else if (event.key.code == sf::Keyboard::Space)
         {
-            spacePressed = false;
+            primaryPressed = false;
         }
     }
 }
@@ -212,13 +243,13 @@ void Game::keyboard(float deltaTime, sf::Event event)
 void Game::update(float deltaTime)
 {
     // Update starfield
-    stars->updateStars(GameWindow, deltaTime);
+    Starfield::updateStars(GameWindow, deltaTime);
 
     // Update enemies (passing a pointer to _projectiles to add EnemyBullets
     formation->updateFormation(deltaTime, &projectiles);
 
     // Update player
-    player->updateMovement(deltaTime);
+    Player::updateMovement(deltaTime);
 
     // Update projectiles, check if they hit someone
     for (auto& projectilePtr : projectiles) 
@@ -227,10 +258,10 @@ void Game::update(float deltaTime)
         formation->checkProjectileCollision(projectilePtr);
         if (projectilePtr->getTeam() == 1) 
         {
-            if (player->isHit(projectilePtr))
+            if (Player::isHit(projectilePtr))
             {
                 projectilePtr->kill();
-                player->applyDamage(projectilePtr->getDamage());
+                Player::applyDamage(projectilePtr->getDamage());
                 ParticleEffects::createSparks(projectilePtr->getPositionM(), 5.0f);
             }
         }
@@ -241,7 +272,7 @@ void Game::update(float deltaTime)
     formation->checkParticleCollision(deltaTime);
 
     // Update FPS counter
-    fpsCounter->displayFps(deltaTime);
+    FPSCounter::update(deltaTime);
 }
 
 void Game::draw(float deltaTime)
@@ -252,9 +283,7 @@ void Game::draw(float deltaTime)
     renderTexture1->setActive(true);
 
     // Draw starfield
-    stars->draw(GameWindow, renderTexture1);
-   
-   
+    Starfield::draw(GameWindow, renderTexture1);
 
     // Draw bullets
     for (auto& bulletPtr : projectiles)
@@ -269,23 +298,24 @@ void Game::draw(float deltaTime)
     ParticleEffects::draw(GameWindow, renderTexture1);
 
     // Draw player
-    player->draw(GameWindow, renderTexture1);
-
-    // Draw fps counter
-    fpsCounter->draw(GameWindow);
+    Player::draw(GameWindow, renderTexture1);
 
     // Apply bloom
     if (bloom)
     {
         //shaders->applyBloom(renderTexture, GameWindow);
-        shaders->applyBloom(renderTexture1, GameWindow);
+        Shaders::applyBloom(renderTexture1, GameWindow);
         //shaders->applyAddition(renderTexture, renderTexture1, GameWindow);
     }
+
     // Reset
-    renderTexture->setActive(false);
-    renderTexture1->setActive(false);
     renderTexture->clear(sf::Color::Black);
     renderTexture1->clear(sf::Color::Black);
+    renderTexture->setActive(false);
+    renderTexture1->setActive(false);
+
+    // Draw fps counter
+    FPSCounter::draw(GameWindow);
 
     //Display
     GameWindow->display();
@@ -318,10 +348,10 @@ void Game::dispose()
     ParticleEffects::dispose();
 
     // Despawn dead player (only hiding the sprite)
-    if (player->isDead() && !playerHidden) 
+    if (Player::isDead() && !playerHidden)
     {
-        ParticleEffects::createExplosion(player->getPositionM(), 5.0f);
-        player->hide();
+        ParticleEffects::createExplosion(Player::getPositionM(), 5.0f);
+        Player::hide();
         playerHidden = true;
     }
 }

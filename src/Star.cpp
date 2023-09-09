@@ -3,65 +3,68 @@
 #include <iostream>
 #include <random>
 
-Star::Star(std::shared_ptr<sf::Vector2f> position, float radius, std::shared_ptr<sf::Vector2f> velocity, sf::Color color) :
+Star::Star(sf::Vector2f& position, float radius, sf::Vector2f& velocity, sf::Color color) :
 	speedUp(false)	
 {
-	_star = std::make_shared<sf::CircleShape>(radius * Settings::getConversionFactor());
-	_star->setPointCount(15);
+	_star.setRadius(radius * Settings::getConversionFactor());
+	_star.setPointCount(15);
 	this->setPositionFromMetersToPixels(position);
-	_star->setFillColor(color);
+	_star.setFillColor(color);
 	_velocity = velocity;
-	_acceleration = std::make_shared<sf::Vector2f>(0.0f, 0.0f);
+	_acceleration.x = 0.0f;
+	_acceleration.y = 0.0f;
 }
-Star::Star(std::shared_ptr<sf::Vector2f> position, float radius, sf::Color color, std::shared_ptr<sf::Vector2f> acceleration) :
+Star::Star(sf::Vector2f& position, float radius, sf::Color color, sf::Vector2f& acceleration) :
 	speedUp(true)
 {
-	_star = std::make_shared<sf::CircleShape>(radius * Settings::getConversionFactor());
-	_star->setPointCount(15);
+	_star.setRadius(radius * Settings::getConversionFactor());
+	_star.setPointCount(15);
 	this->setPositionFromMetersToPixels(position);
-	_star->setFillColor(color);
-	_velocity = std::make_shared<sf::Vector2f>(0.0f, 0.0f);
-	_acceleration = std::make_shared<sf::Vector2f>(*acceleration);
+	_star.setFillColor(color);
+	_velocity.x = 0.0f;
+	_velocity.y = 0.0f;
+	_acceleration = acceleration;
 }
 
-std::shared_ptr<sf::Vector2f> Star::getVelocity()
+sf::Vector2f Star::getVelocity()
 {
 	return this->_velocity;
 }
 
-void Star::setVelocity(std::shared_ptr<sf::Vector2f> velocity)
+void Star::setVelocity(sf::Vector2f velocity)
 {
 	this->_velocity = velocity;
 }
 
-void Star::setPositionFromMetersToPixels(std::shared_ptr<sf::Vector2f> pos)
+void Star::setPositionFromMetersToPixels(sf::Vector2f pos)
 {
-	this->_star->setPosition(*pos * Settings::getConversionFactor());
+	this->_star.setPosition(pos * Settings::getConversionFactor());
 }
 
-std::shared_ptr<sf::Vector2f> Star::getPositionInMetersFromPixels()
+sf::Vector2f Star::getPositionInMetersFromPixels()
 {
-	std::shared_ptr<sf::Vector2f> pos = std::make_shared<sf::Vector2f>(this->_star->getPosition() / Settings::getConversionFactor());
+	sf::Vector2f pos(this->_star.getPosition() / Settings::getConversionFactor());
 	return pos;
 }
 
-void Star::move(std::shared_ptr<sf::Vector2f> vector)
+void Star::move(sf::Vector2f vector)
 {
-	std::shared_ptr<sf::Vector2f> newPos = std::make_shared <sf::Vector2f>(*this->getPositionInMetersFromPixels() + *vector);
+	sf::Vector2f newPos = (this->getPositionInMetersFromPixels() + vector);
 	this->setPositionFromMetersToPixels(newPos);
 }
 
-std::shared_ptr<sf::Vector2f> Star::getAcceleration()
+sf::Vector2f Star::getAcceleration()
 {
-	return std::shared_ptr<sf::Vector2f>(this->_acceleration);
+	return sf::Vector2f(this->_acceleration);
 }
 
 bool Star::isDead(sf::RenderWindow* GameWindow)
 {
-	if (this->getPositionInMetersFromPixels()->y > GameWindow->getSize().y / Settings::getConversionFactor() + 0.1f) 
+	if (this->getPositionInMetersFromPixels().y > GameWindow->getSize().y / Settings::getConversionFactor() + 0.1f) 
 	{
 		return true;
 	}
+
 	return false;
 }
 

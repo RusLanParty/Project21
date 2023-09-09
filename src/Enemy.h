@@ -32,8 +32,8 @@ protected:
 	bool _canShootFlag;
 	float _shootTimer;
 	float _shootThreshold;
-	std::shared_ptr<sf::Vector2f> _velocity;
-	std::shared_ptr<sf::RectangleShape> _enemy;		
+	sf::Vector2f _velocity;
+	sf::RectangleShape _enemy;		
 	float _health;
 	float _hue;
 	float _sat;

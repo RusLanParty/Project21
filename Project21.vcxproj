@@ -110,14 +110,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>F:\libraries\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>F:\libraries\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>F:\libraries\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -137,7 +137,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>F:\libraries\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -145,6 +145,7 @@
     <ClCompile Include="src\ColorConverter.cpp" />
     <ClCompile Include="src\EnemyBullet.cpp" />
     <ClCompile Include="src\EnemyFormation.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\ParticleEffects.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
@@ -153,16 +154,19 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Rocket.cpp" />
     <ClCompile Include="src\Settings.cpp" />
     <ClCompile Include="src\Shaders.cpp" />
     <ClCompile Include="src\Star.cpp" />
     <ClCompile Include="src\Starfield.cpp" />
+    <ClCompile Include="src\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Bullet.h" />
     <ClInclude Include="src\ColorConverter.h" />
     <ClInclude Include="src\EnemyBullet.h" />
     <ClInclude Include="src\EnemyFormation.h" />
+    <ClInclude Include="src\Menu.h" />
     <ClInclude Include="src\Particle.h" />
     <ClInclude Include="src\ParticleEffects.h" />
     <ClInclude Include="src\Projectile.h" />
@@ -170,10 +174,12 @@
     <ClInclude Include="src\FPSCounter.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Rocket.h" />
     <ClInclude Include="src\Settings.h" />
     <ClInclude Include="src\Shaders.h" />
     <ClInclude Include="src\Star.h" />
     <ClInclude Include="src\Starfield.h" />
+    <ClInclude Include="src\Text.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Fonts\arial.ttf" />

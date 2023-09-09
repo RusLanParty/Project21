@@ -2,30 +2,29 @@
 #include <SFML/Graphics.hpp>
 #include "FPSCounter.h"
 #include "Player.h"
-#include "Bullet.h"
 #include "Enemy.h"
-#include "Starfield.h"
 #include "EnemyFormation.h"
 #include "ParticleEffects.h"
+#include "FPSCounter.h"
+#include "Menu.h"
 #include <vector>
 class Game 
 {
 public:
-	Game(sf::RenderWindow* window, std::shared_ptr<sf::Font> font);
+	Game(sf::RenderWindow* window, sf::Font* font);
 	static sf::RenderWindow* GameWindow;
-	std::shared_ptr<sf::Font> Font;	
+	sf::Font* Font;	
+	static std::shared_ptr<sf::RenderTexture> renderTexture;
+	static std::shared_ptr<sf::RenderTexture> renderTexture1;
 	static bool bloom;
-	std::shared_ptr<Shaders> shaders;
-	std::shared_ptr<sf::RenderTexture> renderTexture;
-	std::shared_ptr<sf::RenderTexture> renderTexture1;
+	static bool isIntro;
 private:	
-	std::shared_ptr<FPSCounter> fpsCounter;	
-	std::shared_ptr<EnemyFormation> formation;
-	std::shared_ptr<Starfield> stars;
-	std::vector<std::shared_ptr<Projectile>> projectiles;	
-	std::shared_ptr<Player> player;
+	
+	std::shared_ptr<EnemyFormation> formation;	
+	std::vector<std::shared_ptr<Projectile>> projectiles;		
 	sf::Clock clock;
-	sf::Clock spawnTimer;
+	sf::Clock primaryFireTimer;
+	sf::Clock secondaryFireTimer;	
 	void intro(float deltaTime);
 	void mouse(float deltaTime, sf::Event event);	
 	void mainLoop();
@@ -34,7 +33,4 @@ private:
 	void update(float deltaTime);
 	void draw(float deltaTime);
 	void dispose();
-	static bool spacePressed;	
-	static bool keyPressedD;
-	static bool keyPressedA;
 };

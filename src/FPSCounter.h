@@ -4,23 +4,23 @@
 class FPSCounter 
 {
 public:
-	FPSCounter(float x, float y, float z, float w, std::shared_ptr<sf::Font> font);
-	void draw(sf::RenderWindow* window);
-	void displayFps(float deltaTime);
-	void displayOjbectCount(int objCount);
+	static void init(float x, float y, float z, float w, sf::Font* font);
+	static void draw(sf::RenderWindow* window);
+	static void update(float deltaTime);
+	static void displayOjbectCount(int objCount);
 private:
-	std::shared_ptr<sf::Text> _fpsText;
-	std::shared_ptr<sf::Text> _objectsText;
-	sf::Clock _clock;
-	int _frameCounter;
-	float _deltaFrames;
-	int _frameCounter1;
-	float _deltaFrames1;
-	void updateColor(float fps, float deltaTime);
-	void normalizeHSV();
-	sf::Color HSVtoRGB(float h, float s, float v);
-	int _hue;
-	float _sat;
-	float _val;
-	int _colorTransitionSpeed;
+	static sf::Text _fpsText;
+	static sf::Text _objectsText;
+	static sf::Clock _clock;
+	static int _frameCounter;
+	static float _deltaFrames;
+	static int _frameCounter1;
+	static float _deltaFrames1;
+	static void updateColor(float fps, float deltaTime);
+	static void normalizeHSV();
+	static sf::Color HSVtoRGB(float h, float s, float v);
+	static int _hue;
+	static float _sat;
+	static float _val;
+	static int _colorTransitionSpeed;
 };

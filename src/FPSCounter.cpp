@@ -1,38 +1,41 @@
 #include "FPSCounter.h"
+sf::Clock FPSCounter::_clock;
+sf::Text FPSCounter::_objectsText;
+sf::Text FPSCounter::_fpsText;
+int FPSCounter::_frameCounter=0;
+float FPSCounter::_deltaFrames=20.0f;
+int FPSCounter::_frameCounter1=0;
+float FPSCounter::_deltaFrames1=20.0f;
+int FPSCounter::_hue=0;
+float FPSCounter::_sat=0.0f;
+float FPSCounter::_val=1.0f;
+int FPSCounter::_colorTransitionSpeed = 100.0f;
 
-FPSCounter::FPSCounter(float x, float y, float z, float w, std::shared_ptr<sf::Font> font) :
-	_colorTransitionSpeed(400),
-	_deltaFrames(20.0f),
-	_deltaFrames1(20.0f),
-	_frameCounter(0),
-	_hue(0),
-	_sat(0.0f),
-	_val(1.0f)
+void FPSCounter::init(float x, float y, float z, float w, sf::Font* font)
 {
-	_fpsText = std::make_shared<sf::Text>();
-	_objectsText = std::make_shared<sf::Text>();
-	_fpsText->setFont(*font);
-	_objectsText->setFont(*font);
-	_fpsText->setPosition(x, y);
-	_objectsText->setPosition(z, w);
-	_fpsText->setCharacterSize(20);
-	_objectsText->setCharacterSize(20);
-	sf::Color color(HSVtoRGB(this->_hue, this->_sat, this->_val));
-	_fpsText->setFillColor(color);
-	_objectsText->setFillColor(color);
+	_fpsText.setFont(*font);
+	_objectsText.setFont(*font);
+	_fpsText.setPosition(x, y);
+	_objectsText.setPosition(z, w);
+	_fpsText.setCharacterSize(20);
+	_objectsText.setCharacterSize(20);
+	sf::Color color(HSVtoRGB(_hue, _sat, _val));
+	_fpsText.setFillColor(color);
+	_objectsText.setFillColor(color);
 }
 
 
-void FPSCounter::displayFps(float deltaTime)
+void FPSCounter::update(float deltaTime)
 {	
 	_frameCounter++;
 	if (_frameCounter == _deltaFrames) 
 	{
 		_frameCounter = 0;
 		// restarting the timer
+
 		sf::Time elapsed = _clock.restart();
 		int fps = _deltaFrames / elapsed.asSeconds();
-		_fpsText->setString("FPS: " + std::to_string(static_cast<int>(fps)));
+		_fpsText.setString("FPS: " + std::to_string(static_cast<int>(fps)));
 		updateColor(fps, deltaTime);
 	}
 }
@@ -44,99 +47,98 @@ void FPSCounter::displayOjbectCount(int _objCount)
 	{
 		_frameCounter1 = 0;
 		int objCount = _objCount;
-		_objectsText->setString("OBJECTS COUNT: " + std::to_string(static_cast<int>(objCount)));
+		_objectsText.setString("OBJECTS COUNT: " + std::to_string(static_cast<int>(objCount)));
 	}
 }
 
 void FPSCounter::updateColor(float fps, float deltaTime)
-{
-	if (this->_sat < 1.0f) 
+{	
+	if (_sat < 1.0f) 
 	{
 		_sat += 2.5f * deltaTime;
 	}
 	if (fps < 30.0f) 
 	{
-		if (this->_hue > 0) 
+		if (_hue > 0) 
 		{
-			this->_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
 		}
 		normalizeHSV();
-		sf::Color newColor(HSVtoRGB(this->_hue, this->_sat, this->_val));
-		_fpsText->setFillColor(newColor);
+		sf::Color newColor(HSVtoRGB(_hue, _sat, _val));
+		_fpsText.setFillColor(newColor);
 	}
 	else if (fps > 30.0f && fps < 60.0f) 
 	{
-		if (this->_hue > 30)
+		if (_hue > 30)
 		{
-			this->_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
 		}
-		else if (this->_hue < 30)
+		else if (_hue < 30)
 		{
-			this->_hue += std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue += std::ceil(_colorTransitionSpeed * deltaTime);
 		}
 		normalizeHSV();
-		sf::Color newColor(HSVtoRGB(this->_hue, this->_sat, this->_val));
-		_fpsText->setFillColor(newColor);
+		sf::Color newColor(HSVtoRGB(_hue, _sat, _val));
+		_fpsText.setFillColor(newColor);
 	}
 	else if (fps > 60.0f && fps < 130.0f) 
 	{
-		if (this->_hue > 60)
+		if (_hue > 60)
 		{
-			this->_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
 		}
-		else if (this->_hue < 60)
+		else if (_hue < 60)
 		{
-			this->_hue += std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue += std::ceil(_colorTransitionSpeed * deltaTime);
 		}
 		normalizeHSV();
-		sf::Color newColor(HSVtoRGB(this->_hue, this->_sat, this->_val));
-		_fpsText->setFillColor(newColor);
+		sf::Color newColor(HSVtoRGB(_hue, _sat, _val));
+		_fpsText.setFillColor(newColor);
 	}
 	else if (fps > 130.0f)
 	{
-		if (this->_hue > 120)
+		if (_hue > 120)
 		{
-			this->_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue -= std::ceil(_colorTransitionSpeed * deltaTime);
 		}
-		else if (this->_hue < 120)
+		else if (_hue < 120)
 		{
-			this->_hue += std::ceil(_colorTransitionSpeed * deltaTime);
+			_hue += std::ceil(_colorTransitionSpeed * deltaTime);
 		}
 		normalizeHSV();
-		sf::Color newColor(HSVtoRGB(this->_hue, this->_sat, this->_val));
-		_fpsText->setFillColor(newColor);
-	}
-	//std::cout << "Hue= " << (float)this->_hue << "\n";
+		sf::Color newColor(HSVtoRGB(_hue, _sat, _val));
+		_fpsText.setFillColor(newColor);
+	}	
 }
 
 void FPSCounter::normalizeHSV()
 {
-	if (this->_hue > 360)
+	if (_hue > 360)
 	{
-		this->_hue -= 360;
+		_hue -= 360;
 	}
-	if (this->_sat > 1.0f)
+	if (_sat > 1.0f)
 	{
-		this->_sat = 1.0f;
+		_sat = 1.0f;
 	}
-	else if (this->_sat < 0.0f)
+	else if (_sat < 0.0f)
 	{
-		this->_sat = 0.0f;
+		_sat = 0.0f;
 	}
-	if (this->_val > 1.0f)
+	if (_val > 1.0f)
 	{
-		this->_val = 1.0f;
+		_val = 1.0f;
 	}
-	else if (this->_val < 0.0f)
+	else if (_val < 0.0f)
 	{
-		this->_val = 0.0f;
+		_val = 0.0f;
 	}
 }
 
 void FPSCounter::draw(sf::RenderWindow* window)
 {
-	window->draw(*_fpsText);
-	window->draw(*_objectsText);
+	window->draw(_fpsText);
+	window->draw(_objectsText);
 }
 sf::Color FPSCounter::HSVtoRGB(float h, float s, float v) 
 {

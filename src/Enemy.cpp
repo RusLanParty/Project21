@@ -7,11 +7,13 @@
 
 float normalVal = 0.1f;
 float minVal = 0.01f;
-float valOffset = 1.5f;
+float valOffset = 1.3f;
 
 Enemy::Enemy(sf::Vector2f& spawnPos, int type):		
 	_shootTimer(0.0f),
-	_canShootFlag(false)
+	_canShootFlag(false),
+	_velocity(0.0f, 0.0f),
+	_enemy()
 {
 	switch (type) 
 	{
@@ -29,18 +31,18 @@ Enemy::Enemy(sf::Vector2f& spawnPos, int type):
 		break;
 	}
 	_shootThreshold = 5.0f;
-	_velocity = std::make_shared<sf::Vector2f>(0.0f, 0.0f);
+	
 	sf::Vector2f size(1.0f * Settings::getConversionFactor(), 0.4f * Settings::getConversionFactor());
-	_enemy = std::make_shared<sf::RectangleShape>(size);
-	_enemy->setOrigin(_enemy->getLocalBounds().getSize().x / 2, _enemy->getLocalBounds().getSize().y / 2);
+	_enemy.setSize(size);
+	_enemy.setOrigin(_enemy.getLocalBounds().getSize().x / 2, _enemy.getLocalBounds().getSize().y / 2);
 
 	this->_hue = this->_health;
 	this->_sat = 1.0f;
 	this->_val = normalVal;
 
 	sf::Color color(ColorConverter::HSVtoRGB(this->_hue, this->_sat, this->_val));
-	_enemy->setFillColor(color);
-	_enemy->setPosition(spawnPos);
+	_enemy.setFillColor(color);
+	_enemy.setPosition(spawnPos);
 }
 
 
@@ -51,12 +53,12 @@ bool Enemy::isDead()
 
 void Enemy::draw(sf::RenderWindow* GameWindow)
 {
-	GameWindow->draw(*this->_enemy);	
+	GameWindow->draw(this->_enemy);	
 }
 
 void Enemy::draw(std::shared_ptr<sf::RenderTexture> renderTexture)
 {
-	renderTexture->draw(*this->_enemy);
+	renderTexture->draw(this->_enemy);
 	renderTexture->display();
 }
 
@@ -65,24 +67,23 @@ void Enemy::applyDamage(int damage)
 	// Apply damage
 	this->_health -= damage;	
 
-	// Change color
-	//this->_val = this->_health / 400.0f;
+	// Change color	
 	this->_hue = this->_health;	
 }
 
 bool Enemy::isHit(std::shared_ptr<Projectile> proj)
 {
-	return this->_enemy->getGlobalBounds().intersects(proj->getGlobalBounds());
+	return this->_enemy.getGlobalBounds().intersects(proj->getGlobalBounds());
 }
 bool Enemy::isHit(std::shared_ptr<Particle> particle)
 {
-	return this->_enemy->getGlobalBounds().intersects(particle->getBounds());
+	return this->_enemy.getGlobalBounds().intersects(particle->getBounds());
 }
 
 void Enemy::updateMovement(float deltaTime)
 {
 	// Move
-	sf::Vector2f newPos(this->getPositionM() + *this->_velocity * deltaTime);
+	sf::Vector2f newPos(this->getPositionM() + this->_velocity * deltaTime);
 	this->setPositionM(newPos);
 
 	// Shooting timer
@@ -101,13 +102,13 @@ void Enemy::updateMovement(float deltaTime)
 bool Enemy::touchedBounds()
 {
 	// Bounds
-	if (this->getPositionM().x > Game::GameWindow->getSize().x / Settings::getConversionFactor() - this->_enemy->getLocalBounds().width / 2 / Settings::getConversionFactor())
+	if (this->getPositionM().x > Game::GameWindow->getSize().x / Settings::getConversionFactor() - this->_enemy.getLocalBounds().width / 2 / Settings::getConversionFactor())
 	{
 		//sf::Vector2f pos(Game::GameWindow->getSize().x / Settings::getConversionFactor() - this->_enemy->getLocalBounds().width / 2 / Settings::getConversionFactor(), this->getPositionM().y);
 		//this->setPositionM(pos);
 		return true;
 	}
-	else if (this->getPositionM().x < this->_enemy->getLocalBounds().width / 2 / Settings::getConversionFactor())
+	else if (this->getPositionM().x < this->_enemy.getLocalBounds().width / 2 / Settings::getConversionFactor())
 	{
 		//sf::Vector2f pos(this->_enemy->getLocalBounds().width / 2 / Settings::getConversionFactor(), this->getPositionM().y);
 		//this->setPositionM(pos);
@@ -118,12 +119,12 @@ bool Enemy::touchedBounds()
 
 void Enemy::invertXVelocity()
 {
-	this->_velocity->x *= -1;
+	this->_velocity.x *= -1;
 }
 
 void Enemy::invertYVelocity()
 {
-	this->_velocity->y *= -1;
+	this->_velocity.y *= -1;
 }
 
 bool Enemy::canShoot()
@@ -156,17 +157,17 @@ float Enemy::getRandomChance()
 
 sf::Vector2f Enemy::getPositionM()
 {
-	return this->_enemy->getPosition() / Settings::getConversionFactor();
+	return this->_enemy.getPosition() / Settings::getConversionFactor();
 }
 
 void Enemy::setPositionM(sf::Vector2f& position)
 {
-	this->_enemy->setPosition(position * Settings::getConversionFactor());
+	this->_enemy.setPosition(position * Settings::getConversionFactor());
 }
 
 void Enemy::setVelocity(sf::Vector2f& velocity)
 {
-	*this->_velocity = velocity;
+	this->_velocity = velocity;
 }
 
 
@@ -178,7 +179,7 @@ void Enemy::updateColor(float deltaTime)
 		{
 			this->_val += valOffset * deltaTime;
 		}
-		else if (this->_val > normalVal)
+		else if (this->_val >= normalVal)
 		{
 			this->_val = normalVal;
 			this->blinking = false;
@@ -199,7 +200,7 @@ void Enemy::updateColor(float deltaTime)
 	
 
 	sf::Color color(ColorConverter::HSVtoRGB(this->_hue, this->_sat, this->_val));
-	this->_enemy->setFillColor(color);
+	this->_enemy.setFillColor(color);
 
 }
 

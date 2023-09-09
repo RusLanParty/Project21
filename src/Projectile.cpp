@@ -3,14 +3,16 @@
 
 Projectile::Projectile():
 	_lifeTime(5.0f),
-	_damage(0)
+	_damage(0),
+	_type("null"),
+	_team(-1)
 {
 	
 }
 
 void Projectile::updatePosition(float deltaTime)
 {
-	sf::Vector2f newPos(this->_projectile->getPosition().x + this->_velocity->x * Settings::getConversionFactor() * deltaTime, this->_projectile->getPosition().y + this->_velocity->y * Settings::getConversionFactor() * deltaTime);
+	sf::Vector2f newPos(this->_projectile->getPosition().x + this->_velocity.x * Settings::getConversionFactor() * deltaTime, this->_projectile->getPosition().y + this->_velocity.y * Settings::getConversionFactor() * deltaTime);
 	this->_projectile->setPosition(newPos);
 	this->_lifeTime -= 1.0f * deltaTime;
 }
@@ -46,6 +48,11 @@ bool Projectile::isDead()
 void Projectile::kill()
 {
 	this->_lifeTime = 0;
+}
+
+std::string Projectile::getType()
+{
+	return this->_type;
 }
 
 sf::Vector2f Projectile::getPositionM()

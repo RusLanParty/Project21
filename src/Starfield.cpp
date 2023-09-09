@@ -1,15 +1,8 @@
 #include "Starfield.h"
-#include "Settings.h"
-#include "Star.h"
-#include "Game.h"
-#include "SFML/Graphics/Shader.hpp"
 #include <iostream>
 #include <random>
-uint32_t Starfield::_starsCount = 100;
-Starfield::Starfield(sf::RenderWindow* GameWindow)
-{	
-	createStarfield(GameWindow);
-}
+uint32_t Starfield::_starsCount = 200;
+std::vector<Star> Starfield::_starfield;
 
 void Starfield::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
 {
@@ -17,7 +10,7 @@ void Starfield::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTex
 	{		
 		for (auto& star : _starfield)
 		{
-			renderTexture->draw(*star->_star);
+			renderTexture->draw(star._star);
 		}
 		renderTexture->display();
 	}
@@ -25,7 +18,7 @@ void Starfield::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTex
 	{
 		for (auto& star : _starfield)
 		{
-			GameWindow->draw(*star->_star);			
+			GameWindow->draw(star._star);			
 		}
 	}
 }
@@ -35,13 +28,13 @@ void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
 	// Move stars
 	for (auto& star : _starfield) 
 	{
-		if (star->speedUp) 
+		if (star.speedUp) 
 		{
-			std::shared_ptr<sf::Vector2f> newVel = std::make_shared<sf::Vector2f>(*star->getVelocity() + *star->getAcceleration() * deltaTime);
-			star->setVelocity(newVel);
+			sf::Vector2f newVel(star.getVelocity() + star.getAcceleration() * deltaTime);
+			star.setVelocity(newVel);
 		}
-		std::shared_ptr<sf::Vector2f> vector = std::make_shared<sf::Vector2f>(*star->getVelocity() * deltaTime);
-		star->move(vector);
+		sf::Vector2f vector(star.getVelocity() * deltaTime);
+		star.move(vector);
 	}
 
 	// Spawn new stars
@@ -50,10 +43,10 @@ void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
 		while (_starfield.size() < _starsCount) 
 		{
 			float radius = getRandomRadius();
-			std::shared_ptr<sf::Vector2f> position = getRandomPositionOutOfBounds(GameWindow);
-			std::shared_ptr<sf::Vector2f> velocity = getRandomVelocity();
+			sf::Vector2f position = getRandomPositionOutOfBounds(GameWindow);
+			sf::Vector2f velocity = getRandomVelocity();
 			sf::Color color = getRandomColor();
-			std::shared_ptr<Star> star = std::make_shared<Star>(position, radius, velocity, color);
+			Star star(position, radius, velocity, color);
 			_starfield.push_back(star);
 		}
 	}
@@ -62,10 +55,8 @@ void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
 	auto it = _starfield.begin();
 	while (it != _starfield.end())
 	{
-		if ((*it)->isDead(GameWindow))
+		if ((it)->isDead(GameWindow))
 		{
-			(*it).reset();
-
 			it = _starfield.erase(it);
 		}
 		else
@@ -77,23 +68,28 @@ void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
 
 uint32_t Starfield::getCurrentStarsCount()
 {
-	return this->_starfield.size();
+	return _starfield.size();
 }
 
 void Starfield::createStarfield(sf::RenderWindow* GameWindow)
-{
+{	
 	for (uint32_t i = 0; i < _starsCount; i++) 
 	{
 		float radius = getRandomRadius();
-		std::shared_ptr<sf::Vector2f> position = getRandomPosition(GameWindow);
+		sf::Vector2f position = getRandomPosition(GameWindow);
 		sf::Color color = getRandomColor();
-		std::shared_ptr<sf::Vector2f> acceleration = getRandomAcceleration();
-		std::shared_ptr<Star> star = std::make_shared<Star>(position, radius, color, acceleration);
+		sf::Vector2f acceleration = getRandomAcceleration();
+		Star star(position, radius, color, acceleration);
 		_starfield.push_back(star);
 	}
 }
 
-std::shared_ptr<sf::Vector2f> Starfield::getRandomPosition(sf::RenderWindow* GameWindow)
+std::vector<Star> Starfield::getStars()
+{
+	return Starfield::_starfield;
+}
+
+sf::Vector2f Starfield::getRandomPosition(sf::RenderWindow* GameWindow)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -101,11 +97,11 @@ std::shared_ptr<sf::Vector2f> Starfield::getRandomPosition(sf::RenderWindow* Gam
 	std::uniform_real_distribution<float> disY(0.0f, GameWindow->getSize().y / Settings::getConversionFactor());
 	float randX = disX(gen);
 	float randY = disY(gen);
-	std::shared_ptr<sf::Vector2f> randPos = std::make_shared<sf::Vector2f>(randX, randY);
+	sf::Vector2f randPos(randX, randY);
 	return randPos;
 }
 
-std::shared_ptr<sf::Vector2f> Starfield::getRandomPositionOutOfBounds(sf::RenderWindow* GameWindow)
+sf::Vector2f Starfield::getRandomPositionOutOfBounds(sf::RenderWindow* GameWindow)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -113,11 +109,11 @@ std::shared_ptr<sf::Vector2f> Starfield::getRandomPositionOutOfBounds(sf::Render
 	std::uniform_real_distribution<float> disY(-10.0f, -5.0f);
 	float randX = disX(gen);
 	float randY = disY(gen);
-	std::shared_ptr<sf::Vector2f> randPos = std::make_shared<sf::Vector2f>(randX, randY);
+	sf::Vector2f randPos(randX, randY);
 	return randPos;
 }
 
-std::shared_ptr<sf::Vector2f> Starfield::getRandomVelocity()
+sf::Vector2f Starfield::getRandomVelocity()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -128,11 +124,11 @@ std::shared_ptr<sf::Vector2f> Starfield::getRandomVelocity()
 
 	// Adjust the distribution for bias
 	float exponent = 20.0f; 
-	std::shared_ptr<sf::Vector2f> randVel = std::make_shared<sf::Vector2f>(0.0f, pow(randomValue, exponent));
+	sf::Vector2f randVel(0.0f, pow(randomValue, exponent));
 	return randVel;
 	
 }
-std::shared_ptr<sf::Vector2f> Starfield::getRandomAcceleration()
+sf::Vector2f Starfield::getRandomAcceleration()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -141,7 +137,7 @@ std::shared_ptr<sf::Vector2f> Starfield::getRandomAcceleration()
 
 	// Adjust the distribution for bias
 	float exponent = 20.0f;
-	std::shared_ptr<sf::Vector2f> randAcc = std::make_shared<sf::Vector2f>(0.0f, pow(randomValue, exponent));
+	sf::Vector2f randAcc(0.0f, pow(randomValue, exponent));
 	return randAcc;
 }
 
@@ -149,7 +145,7 @@ float Starfield::getRandomRadius()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.005f, 0.015f);
+	std::uniform_real_distribution<float> dis(0.01f, 0.02f);
 	float randRad = dis(gen);
 	return randRad;
 }
@@ -164,31 +160,7 @@ sf::Color Starfield::getRandomColor()
 	float hue = dis1(gen);
 	float sat = dis2(gen);
 	float val = dis3(gen);
-	sf::Color randColor = HSVtoRGB(hue, sat, val);
+	sf::Color randColor = ColorConverter::HSVtoRGB(hue, sat, val);
 	return randColor;
 }
 
-sf::Color Starfield::HSVtoRGB(float hue, float saturation, float value)
-{
-
-	int hi = int(hue / 60.0f) % 6;
-	float f = hue / 60.0f - int(hue / 60.0f);
-	float p = value * (1 - saturation);
-	float q = value * (1 - f * saturation);
-	float t = value * (1 - (1 - f) * saturation);
-
-	switch (hi) {
-	case 0:
-		return sf::Color(value * 255, t * 255, p * 255);
-	case 1:
-		return sf::Color(q * 255, value * 255, p * 255);
-	case 2:
-		return sf::Color(p * 255, value * 255, t * 255);
-	case 3:
-		return sf::Color(p * 255, q * 255, value * 255);
-	case 4:
-		return sf::Color(t * 255, p * 255, value * 255);
-	default: // case 5:
-		return sf::Color(value * 255, p * 255, q * 255);
-	}
-}

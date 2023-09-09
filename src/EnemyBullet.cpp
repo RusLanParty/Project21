@@ -3,10 +3,12 @@
 
 EnemyBullet::EnemyBullet(sf::Vector2f spawnPos)
 {
+	_type = "Bullet";
 	_team = 1;
 	_damage = 0.0f;
-	_velocity = std::make_shared<sf::Vector2f>(0.0f, 10.0f);
-	sf::Vector2f size(0.03f * Settings::getConversionFactor(), 0.1f * Settings::getConversionFactor());
+	_velocity.x = 0.0f;
+	_velocity.y = 10.0f;
+	sf::Vector2f size(0.08f * Settings::getConversionFactor(), 0.2f * Settings::getConversionFactor());
 	_projectile = std::make_shared<sf::RectangleShape>(size);
 
 	// Color

@@ -4,26 +4,31 @@
 #include "Shaders.h"
 #include "Settings.h"
 #include "Bullet.h"
+#include "Rocket.h"
+#include "Game.h"
+#include <iostream>
+
 class Player 
 {
 public:
-	Player(std::shared_ptr<sf::Vector2f> spawnPos);
-	void updateMovement(float deltaTime);
-	bool isHit(std::shared_ptr<Projectile> proj);
-	bool isDead();
-	void applyDamage(float damage);
-	std::shared_ptr<Bullet> shoot(sf::Vector2f pos);
-	void hide();
-	void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
-	void accelerate(sf::Vector2f& acc, float deltaTime);
-	void decelerate(sf::Vector2f& dec, float deltaTime);
-	std::shared_ptr<sf::Vector2f> getVelocity() const;
-	sf::Vector2f getPositionM() const;
-	void setPositionM(sf::Vector2f& pos);
+	static void load(std::shared_ptr<sf::Vector2f> spawnPos);
+	static void updateMovement(float deltaTime);
+	static bool isHit(std::shared_ptr<Projectile> proj);
+	static bool isDead();
+	static void applyDamage(float damage);
+	static std::shared_ptr<Bullet> shootPrimary(sf::Vector2f pos);
+	static std::shared_ptr<Rocket> shootSecondary(sf::Vector2f pos);
+	static void hide();
+	static void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
+	static void accelerate(sf::Vector2f& acc, float deltaTime);
+	static void decelerate(sf::Vector2f& dec, float deltaTime);
+	static sf::Vector2f getVelocity();
+	static sf::Vector2f getPositionM();
+	static void setPositionM(sf::Vector2f& pos);
 private:
-	std::shared_ptr<sf::Vector2f> velocity;
-	std::shared_ptr<sf::Vector2f> acceleration;
-	sf::Texture playerTexture;
-	std::shared_ptr<sf::Sprite> player;
-	float _health;
+	static sf::Vector2f velocity;
+	static sf::Vector2f acceleration;
+	static sf::Texture playerTexture;
+	static sf::Sprite player;
+	
 };

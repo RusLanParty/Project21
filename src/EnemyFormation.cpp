@@ -47,6 +47,12 @@ void EnemyFormation::checkProjectileCollision(std::shared_ptr<Projectile> proj)
                     enemyPtr->applyDamage(proj->getDamage());
                     enemyPtr->flash();
 
+                    // If rocket create explosion
+                    if (proj->getType() == "Rocket")
+                    {
+                        ParticleEffects::createRocketExplosion(proj->getPositionM(), 5.0f);
+                    }
+
                     // Get color of enemie for the particles
                     float hue = enemyPtr->getColor().r;
                     float sat = enemyPtr->getColor().g;
@@ -183,9 +189,11 @@ void EnemyFormation::despawnDead()
     {
         if ((*it1)->isDead())
         {
+            // Colorful explosion
+            ParticleEffects::createExplosion((*it1)->getPositionM(), 5.0f, (*it1)->getColor().r, (*it1)->getColor().g, (*it1)->getColor().b);
+            // Regular explosion
             ParticleEffects::createExplosion((*it1)->getPositionM(), 5.0f);
             (*it1).reset();
-
             it1 = _enemies.erase(it1);
         }
         else

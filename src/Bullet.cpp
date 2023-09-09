@@ -3,9 +3,11 @@
 
 Bullet::Bullet(sf::Vector2f spawnPos)	
 {
+	_type = "Bullet";
 	_team = 0;
 	_damage = 20.0f;
-	_velocity = std::make_shared<sf::Vector2f>(0.0f, -15.0f);
+	_velocity.x = 0.0f;
+	_velocity.y = -15.0f;
 	sf::Vector2f size(0.08f * Settings::getConversionFactor(), 0.2f * Settings::getConversionFactor());
 	_projectile = std::make_shared<sf::RectangleShape>(size);
 
