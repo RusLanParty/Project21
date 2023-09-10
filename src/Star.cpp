@@ -1,29 +1,19 @@
 #include "Star.h"
 #include "Settings.h"
+#include "Game.h"
 #include <iostream>
 #include <random>
 
-Star::Star(sf::Vector2f& position, float radius, sf::Vector2f& velocity, sf::Color color) :
-	speedUp(false)	
-{
-	_star.setRadius(radius * Settings::getConversionFactor());
-	_star.setPointCount(15);
-	this->setPositionFromMetersToPixels(position);
-	_star.setFillColor(color);
-	_velocity = velocity;
-	_acceleration.x = 0.0f;
-	_acceleration.y = 0.0f;
-}
 Star::Star(sf::Vector2f& position, float radius, sf::Color color, sf::Vector2f& acceleration) :
 	speedUp(true)
 {
-	_star.setRadius(radius * Settings::getConversionFactor());
-	_star.setPointCount(15);
+	this->_star.setRadius(radius);
+	this->_star.setPointCount(15);
 	this->setPositionFromMetersToPixels(position);
-	_star.setFillColor(color);
-	_velocity.x = 0.0f;
-	_velocity.y = 0.0f;
-	_acceleration = acceleration;
+	this->_star.setFillColor(color);
+	this->_velocity.x = 0.0f;
+	this->_velocity.y = 0.0f;
+	this->_acceleration = acceleration;
 }
 
 sf::Vector2f Star::getVelocity()
@@ -58,13 +48,20 @@ sf::Vector2f Star::getAcceleration()
 	return sf::Vector2f(this->_acceleration);
 }
 
-bool Star::isDead(sf::RenderWindow* GameWindow)
+void Star::respawn(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Color color)
 {
-	if (this->getPositionInMetersFromPixels().y > GameWindow->getSize().y / Settings::getConversionFactor() + 0.1f) 
+	this->_star.setRadius(radius);
+	this->_star.setFillColor(color);
+	this->setPositionFromMetersToPixels(position);
+	this->setVelocity(velocity);
+}
+
+bool Star::isDead()
+{
+	if (this->getPositionInMetersFromPixels().y > Game::GameWindow->getSize().y / Settings::getConversionFactor() + 0.1f) 
 	{
 		return true;
 	}
-
 	return false;
 }
 

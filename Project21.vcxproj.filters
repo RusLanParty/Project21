@@ -69,7 +69,10 @@
     <ClCompile Include="src\Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Text.cpp">
+    <ClCompile Include="src\GameText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,7 +128,10 @@
     <ClInclude Include="src\Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Text.h">
+    <ClInclude Include="src\GameText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MenuItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

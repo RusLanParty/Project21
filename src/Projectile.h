@@ -8,7 +8,7 @@ class Projectile
 public:
 	Projectile();
 	void updatePosition(float deltaTime);
-	void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
+	void draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture);
 	int getDamage();
 	int getTeam();
 	bool isDead();

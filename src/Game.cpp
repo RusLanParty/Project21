@@ -9,17 +9,23 @@ bool playerHidden = false;
 float primaryRateOfFire = 150.0f;
 float secondaryRateOfFire = 1500.0f;
 bool Game::isIntro = false;
-std::shared_ptr<sf::RenderTexture> Game::renderTexture = std::make_shared<sf::RenderTexture>();
-std::shared_ptr<sf::RenderTexture> Game::renderTexture1 = std::make_shared<sf::RenderTexture>();
+sf::RenderTexture* Game::renderTexture = new sf::RenderTexture();
+sf::RenderTexture* Game::renderTexture1 = new sf::RenderTexture();
+sf::Font* Game::Font = new sf::Font;
 
-Game::Game(sf::RenderWindow* window, sf::Font* font):
-Font(font)
+Game::Game(sf::RenderWindow* window)
 {
     // CONVERSION FACTOR (scale of the game)
     Settings::setConversionFactor(100.0f);
 
+    // Load font
+    if (!Font->loadFromFile("Fonts/arial.ttf"))
+    {
+        std::cout << "Error loading font" << "\n";
+    }
+
     // Create FPSCounter
-    FPSCounter::init(0.0f, 0.0f, 150.0f, 0.0f, font);
+    FPSCounter::init(0.0f, 0.0f, 150.0f, 0.0f, Font);
 
     //Init RenderWindow
     GameWindow = window;
@@ -40,6 +46,9 @@ Font(font)
         std::cout << "GAME: FAILED TO CREATE RENDER TEXTURE";
     }
     
+    // Init menu
+    Menu::initMenu();
+
     //REPLACE THIS WITH LEVEL INIT
     // Create EnemyFormation, the class that creates, spawns, moves, draws and despawns enemies
 
@@ -273,6 +282,7 @@ void Game::update(float deltaTime)
 
     // Update FPS counter
     FPSCounter::update(deltaTime);
+    FPSCounter::displayOjbectCount(Starfield::getCurrentStarsCount());
 }
 
 void Game::draw(float deltaTime)

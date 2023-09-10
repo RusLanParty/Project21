@@ -9,7 +9,7 @@ public:
 	void checkParticleCollision(float deltaTime);
 	void updateFormation(float deltaTime, std::vector<std::shared_ptr<Projectile>>* projectiles);
 	void moveDown();
-	void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
+	void draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture);
     void despawnDead();
 private:
 	float _spawnThresh;

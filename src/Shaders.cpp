@@ -46,7 +46,7 @@ void Shaders::loadShaders()
     bloomY.setUniform("height", height);
 }
 
-void Shaders::applyBloom(std::shared_ptr<sf::RenderTexture> xRenderTexture, sf::RenderWindow* GameWindow)
+void Shaders::applyBloom(sf::RenderTexture* xRenderTexture, sf::RenderWindow* GameWindow)
 { 
     // Create temp textures
     sf::RenderTexture tempTexture;

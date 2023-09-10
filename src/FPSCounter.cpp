@@ -9,7 +9,7 @@ float FPSCounter::_deltaFrames1=20.0f;
 int FPSCounter::_hue=0;
 float FPSCounter::_sat=0.0f;
 float FPSCounter::_val=1.0f;
-int FPSCounter::_colorTransitionSpeed = 100.0f;
+int FPSCounter::_colorTransitionSpeed = 200.0f;
 
 void FPSCounter::init(float x, float y, float z, float w, sf::Font* font)
 {

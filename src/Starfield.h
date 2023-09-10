@@ -8,7 +8,7 @@
 class Starfield 
 {
 public:	
-	static void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
+	static void draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture);
 	static uint32_t getCurrentStarsCount();
 	static void updateStars(sf::RenderWindow* GameWindow, float deltaTime);
 	static void createStarfield(sf::RenderWindow* GameWindow);

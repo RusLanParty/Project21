@@ -1,6 +1,15 @@
 #include "Menu.h"
-bool Menu::active = true;
+bool Menu::_active = true;
+std::vector<GameText> Menu::_texts;
 
+void Menu::initMenu()
+{
+    // Title text
+    float offsetY = Game::GameWindow->getSize().y / 1.5;
+    sf::Vector2f titlePos(Game::GameWindow->getSize().x / 2, Game::GameWindow->getSize().y - offsetY);
+    GameText title(titlePos, "SPACE INVADERS 23", 30, sf::Color::White, Game::Font);
+    _texts.push_back(title);
+}
 
 void Menu::menuLoop()
 {
@@ -11,7 +20,7 @@ void Menu::menuLoop()
 
 bool Menu::isActive()
 {
-    return active;
+    return _active;
 }
 
 void Menu::handleInput()
@@ -46,7 +55,7 @@ void Menu::keyboard(sf::Event event)
         else if (event.key.code == sf::Keyboard::Enter)
         {
             //LOAD LEVEL
-            Menu::active = false;
+            Menu::_active = false;
             Game::isIntro = true;
             // Spawn player in the center, hide cursor and start the game's main loop
             std::shared_ptr<sf::Vector2f> playerSpawnPos = std::make_shared<sf::Vector2f>(Game::GameWindow->getSize().x / 2, Game::GameWindow->getSize().y + 1.5f * Settings::getConversionFactor());
@@ -67,6 +76,18 @@ void Menu::draw()
     // Draw particles
     ParticleEffects::draw(Game::GameWindow, Game::renderTexture1);
 
+    // Draw text
+    for (auto& txt : _texts) 
+    {
+        if (Game::bloom) 
+        {
+            txt.draw(Game::renderTexture1);
+        }
+        else 
+        {
+            txt.draw(Game::GameWindow);
+        }
+    }
        
     // Apply bloom
     if (Game::bloom)

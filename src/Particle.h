@@ -14,7 +14,7 @@ public:
 	sf::FloatRect getBounds();
 	float getDamage(float deltaTime);
 	bool isDead();
-	void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
+	void draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture);
 private:
 	sf::Vector2f _velocity;
 	sf::CircleShape _particle;

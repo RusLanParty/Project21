@@ -13,7 +13,9 @@ Enemy::Enemy(sf::Vector2f& spawnPos, int type):
 	_shootTimer(0.0f),
 	_canShootFlag(false),
 	_velocity(0.0f, 0.0f),
-	_enemy()
+	_enemy(),
+	_health(0),
+	_hue(0)
 {
 	switch (type) 
 	{
@@ -56,7 +58,7 @@ void Enemy::draw(sf::RenderWindow* GameWindow)
 	GameWindow->draw(this->_enemy);	
 }
 
-void Enemy::draw(std::shared_ptr<sf::RenderTexture> renderTexture)
+void Enemy::draw(sf::RenderTexture* renderTexture)
 {
 	renderTexture->draw(this->_enemy);
 	renderTexture->display();

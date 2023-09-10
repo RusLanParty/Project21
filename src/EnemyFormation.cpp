@@ -161,7 +161,7 @@ void EnemyFormation::moveDown()
     }
 }
 
-void EnemyFormation::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void EnemyFormation::draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture)
 {
     if (!_enemies.empty()) 
     {

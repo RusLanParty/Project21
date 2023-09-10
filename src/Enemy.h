@@ -17,7 +17,7 @@ public:
 	bool touchedBounds();
 	bool isDead();
 	void draw(sf::RenderWindow* GameWindow);
-	void draw(std::shared_ptr<sf::RenderTexture> renderTexture);
+	void draw(sf::RenderTexture* renderTexture);
 	void applyDamage(int damage);
 	sf::Vector2f getPositionM();
 	void flash();

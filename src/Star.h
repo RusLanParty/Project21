@@ -2,8 +2,7 @@
 #include "SFML/Graphics.hpp"
 class Star 
 {
-public:
-	Star(sf::Vector2f& position, float radius,sf::Vector2f& velocity, sf::Color color);
+public:	
 	Star(sf::Vector2f& position, float radius, sf::Color color, sf::Vector2f& acceleration);
 	sf::Vector2f getVelocity();
 	void setVelocity(sf::Vector2f velocity);
@@ -11,9 +10,10 @@ public:
 	sf::Vector2f getPositionInMetersFromPixels();
 	void move(sf::Vector2f vector);
 	sf::Vector2f getAcceleration();
-	bool isDead(sf::RenderWindow* GameWindow);
-	sf::CircleShape _star;
+	void respawn(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Color color);
+	bool isDead();
 	bool speedUp;
+	sf::CircleShape _star;
 private:
 	sf::Vector2f _velocity;
 	sf::Vector2f _acceleration;

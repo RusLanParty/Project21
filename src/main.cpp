@@ -4,20 +4,11 @@
 
 void start() 
 {
-    static sf::Font* font = new sf::Font;
-    if (!font->loadFromFile("Fonts/arial.ttf"))
-    {
-        std::cout << "Error loading font" << "\n";
-    }
-    else
-    { 
-        sf::ContextSettings settings;
-        settings.antialiasingLevel = 16;
-        sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "PROJECT21", sf::Style::Fullscreen, settings);
-        window->setFramerateLimit(144);
-        window->setVerticalSyncEnabled(true);
-        Game game(window, font);
-    }
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 16;
+    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), "PROJECT21", sf::Style::Fullscreen, settings);        window->setFramerateLimit(144);
+    window->setVerticalSyncEnabled(true);
+    Game game(window);
 }   
 int main()
 {

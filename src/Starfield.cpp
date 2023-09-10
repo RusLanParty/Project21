@@ -1,10 +1,10 @@
 #include "Starfield.h"
 #include <iostream>
 #include <random>
-uint32_t Starfield::_starsCount = 200;
+uint32_t Starfield::_starsCount = 3000;
 std::vector<Star> Starfield::_starfield;
 
-void Starfield::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void Starfield::draw(sf::RenderWindow* GameWindow,sf::RenderTexture* renderTexture)
 {
 	if (Game::bloom) 
 	{		
@@ -24,7 +24,7 @@ void Starfield::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTex
 }
 
 void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
-{
+{	
 	// Move stars
 	for (auto& star : _starfield) 
 	{
@@ -35,33 +35,14 @@ void Starfield::updateStars(sf::RenderWindow* GameWindow, float deltaTime)
 		}
 		sf::Vector2f vector(star.getVelocity() * deltaTime);
 		star.move(vector);
-	}
-
-	// Spawn new stars
-	if (_starfield.size() < _starsCount) 
-	{
-		while (_starfield.size() < _starsCount) 
+		if (star.isDead()) 
 		{
 			float radius = getRandomRadius();
 			sf::Vector2f position = getRandomPositionOutOfBounds(GameWindow);
 			sf::Vector2f velocity = getRandomVelocity();
-			sf::Color color = getRandomColor();
-			Star star(position, radius, velocity, color);
-			_starfield.push_back(star);
-		}
-	}
-
-	// Despawn old stars
-	auto it = _starfield.begin();
-	while (it != _starfield.end())
-	{
-		if ((it)->isDead(GameWindow))
-		{
-			it = _starfield.erase(it);
-		}
-		else
-		{
-			++it;
+			sf::Color color = getRandomColor();			
+			star.respawn(radius, position, velocity, color);
+			star.speedUp = false;
 		}
 	}
 }
@@ -119,11 +100,11 @@ sf::Vector2f Starfield::getRandomVelocity()
 	std::mt19937 gen(rd());
 
 	// Define a distribution with a bias towards lower values
-	std::uniform_real_distribution<float> distribution(1.0f, 4.0f);
+	std::uniform_real_distribution<float> distribution(0.1f, 10.0f);
 	float randomValue = distribution(gen);
 
 	// Adjust the distribution for bias
-	float exponent = 20.0f; 
+	float exponent = 2.0f; 
 	sf::Vector2f randVel(0.0f, pow(randomValue, exponent));
 	return randVel;
 	
@@ -132,12 +113,9 @@ sf::Vector2f Starfield::getRandomAcceleration()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> distribution(0.4f, 1.1f);
+	std::uniform_real_distribution<float> distribution(0.1f, 0.2f);
 	float randomValue = distribution(gen);
-
-	// Adjust the distribution for bias
-	float exponent = 20.0f;
-	sf::Vector2f randAcc(0.0f, pow(randomValue, exponent));
+	sf::Vector2f randAcc(0.0f, randomValue);
 	return randAcc;
 }
 
@@ -145,7 +123,7 @@ float Starfield::getRandomRadius()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.01f, 0.02f);
+	std::uniform_real_distribution<float> dis(0.01f * Settings::getConversionFactor(), 0.02f * Settings::getConversionFactor());
 	float randRad = dis(gen);
 	return randRad;
 }

@@ -104,7 +104,7 @@ void Player::hide()
 	player.setColor(sf::Color::Transparent);
 }
 
-void Player::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void Player::draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture)
 {
 	if (Game::bloom)
 	{		

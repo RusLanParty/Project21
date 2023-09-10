@@ -12,7 +12,7 @@ public:
 	static void createRocketExplosion(const sf::Vector2f& position, float radius);
 
 	static void update(float deltaTime);
-	static void draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture);
+	static void draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture);
 	static std::shared_ptr<std::vector<std::shared_ptr<Particle>>> getAllParticles();
 	static void dispose();
 

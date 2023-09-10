@@ -151,7 +151,7 @@ float Particle::getRandomRadiusM()
 	return randRad;
 }
 
-void Particle::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void Particle::draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture)
 {
 	if (Game::bloom)
 	{

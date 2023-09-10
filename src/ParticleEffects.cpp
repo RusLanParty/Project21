@@ -84,7 +84,7 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 
 		// Add to _particles				
 		float lifeTime = 3.0f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.05f, 40.0f, 0.1f, 1.0f, lifeTime));
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.06f, 40.0f, 0.1f, 1.0f, lifeTime));
 	}
 }
 
@@ -106,7 +106,7 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 
 		// Add to _particles
 		float lifeTime = 3.0f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.05f, hue, 0.8f, val, lifeTime));
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.06f, hue, 0.8f, val, lifeTime));
 	}
 }
 
@@ -140,7 +140,7 @@ void ParticleEffects::update(float deltaTime)
 	}
 }
 
-void ParticleEffects::draw(sf::RenderWindow* GameWindow, std::shared_ptr<sf::RenderTexture> renderTexture)
+void ParticleEffects::draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture)
 {
 	for (auto& particle : _particles) 
 	{
