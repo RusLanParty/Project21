@@ -3,7 +3,7 @@ uniform float sigma;
 uniform float glowMultiplier;
 uniform float height;
 
-const int KERNEL_SIZE = 50;
+const int KERNEL_SIZE = 10;
 float glow = glowMultiplier / (sigma * sqrt(2.0 * 3.14159));
 
 float blurWeight(float x)

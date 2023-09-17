@@ -10,6 +10,8 @@ float minVal = 0.01f;
 float valOffset = 1.3f;
 
 Enemy::Enemy(sf::Vector2f& spawnPos, int type):		
+	flashing(false),
+	blinking(false),
 	_shootTimer(0.0f),
 	_canShootFlag(false),
 	_velocity(0.0f, 0.0f),

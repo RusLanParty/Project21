@@ -25,7 +25,7 @@ Game::Game(sf::RenderWindow* window)
     }
 
     // Create FPSCounter
-    FPSCounter::init(0.0f, 0.0f, 150.0f, 0.0f, Font);
+    FPSCounter::init(0.0f, 0.0f, 100.0f, 0.0f, Font);
 
     //Init RenderWindow
     GameWindow = window;
@@ -54,11 +54,15 @@ Game::Game(sf::RenderWindow* window)
 
     //LAYOUT
     std::vector<std::vector<int>> formation1 = {
-        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, // Row 1
-        {3, 0, 1, 0, 1, 0, 2, 2, 2, 0, 1, 0, 1, 0, 3}, // Row 2
-        {3, 3, 3 ,3, 3, 3, 2, 2, 2, 3, 3, 3, 3 ,3 ,3}, // Row 3
-        {3, 0, 1, 0, 1, 0, 2, 2, 2, 0, 1, 0, 1, 0, 3}, // Row 4
-        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}  // Row 5
+        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, // Row 1
+        {3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3}, // Row 2
+        {3, 2, 1 ,1, 1, 1, 1, 3, 3, 3, 3, 3, 1 ,1 ,1, 1, 1, 2, 3}, // Row 3
+        {3, 2, 1, 2, 2, 2, 2, 3, 0, 0, 0, 3, 2, 2, 2, 2, 1, 2, 3}, // Row 4
+        {3, 2, 1, 2, 2, 2, 2, 3, 0, 0, 0, 3, 2, 2, 2, 2, 1, 2, 3}, // Row 5
+        {3, 2, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 2, 2, 2, 2, 1, 2, 3}, // Row 6
+        {3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3}, // Row 7
+        {3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3}, // Row 8
+        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}  // Row 9
     };    
 
     // Pointer to the layout
@@ -84,7 +88,7 @@ void Game::mainLoop()
         // Menu
         if (Menu::isActive())
         {     
-            Menu::menuLoop();
+            Menu::menuLoop(deltaTime);
         }
         
         // Game loop
@@ -94,7 +98,6 @@ void Game::mainLoop()
             {
                 intro(deltaTime);
             }
-
             handleInput(deltaTime);
             update(deltaTime);
             draw(deltaTime);
@@ -301,22 +304,25 @@ void Game::draw(float deltaTime)
         bulletPtr->draw(GameWindow, renderTexture1);
     }
 
-    // Draw enemies
-    formation->draw(GameWindow, renderTexture1);
 
     // Draw particles
     ParticleEffects::draw(GameWindow, renderTexture1);
 
-    // Draw player
-    Player::draw(GameWindow, renderTexture1);
+   
 
     // Apply bloom
     if (bloom)
     {
-        //shaders->applyBloom(renderTexture, GameWindow);
+        //Shaders::applyBloom(renderTexture, GameWindow);
         Shaders::applyBloom(renderTexture1, GameWindow);
-        //shaders->applyAddition(renderTexture, renderTexture1, GameWindow);
+        //Shaders::applyAddition(renderTexture, renderTexture1, GameWindow);
     }
+
+    // Draw enemies
+    formation->draw(GameWindow, renderTexture1);
+
+    // Draw player
+    Player::draw(GameWindow, renderTexture1);
 
     // Reset
     renderTexture->clear(sf::Color::Black);

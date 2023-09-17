@@ -6,7 +6,7 @@ class Shaders
 public:
 	static void loadShaders();
 	static void applyBloom(sf::RenderTexture*, sf::RenderWindow* GameWindow);
-	static void applyAddition(std::shared_ptr<sf::RenderTexture> renderTexture, std::shared_ptr<sf::RenderTexture> renderTexture1, sf::RenderWindow* GameWindow);
+	static void applyAddition(sf::RenderTexture* renderTexture, sf::RenderTexture* renderTexture1, sf::RenderWindow* GameWindow);
 private:
 	
 	static sf::Shader bloomX;

@@ -50,12 +50,17 @@ void Shaders::applyBloom(sf::RenderTexture* xRenderTexture, sf::RenderWindow* Ga
 { 
     // Create temp textures
     sf::RenderTexture tempTexture;
+    sf::RenderTexture tempTexture1;
     sf::RenderTexture yRenderTexture;
     sf::Sprite sprite(xRenderTexture->getTexture());
     sf::Texture sourceTexture(xRenderTexture->getTexture());
     if (!tempTexture.create(GameWindow->getSize().x, GameWindow->getSize().y)) 
     {
         std::cout << "SHADERS: failed to create tempTexture" << "\n";
+    }
+    if (!tempTexture1.create(GameWindow->getSize().x, GameWindow->getSize().y))
+    {
+        std::cout << "SHADERS: failed to create tempTexture1" << "\n";
     }
     if (!yRenderTexture.create(GameWindow->getSize().x, GameWindow->getSize().y))
     {
@@ -75,7 +80,8 @@ void Shaders::applyBloom(sf::RenderTexture* xRenderTexture, sf::RenderWindow* Ga
     // Add X + Y
     add.setUniform("source", xRenderTexture->getTexture());
     add.setUniform("bloom", yRenderTexture.getTexture());    
-    tempTexture.draw(sprite, &add);
+    tempTexture.draw(sprite, &add);   
+    //tempTexture.display();
 
     // Draw final result to window
     sprite.setTexture(tempTexture.getTexture());
@@ -83,7 +89,7 @@ void Shaders::applyBloom(sf::RenderTexture* xRenderTexture, sf::RenderWindow* Ga
     xRenderTexture->clear(sf::Color::Transparent);
 }
 
-void Shaders::applyAddition(std::shared_ptr<sf::RenderTexture> xRenderTexture, std::shared_ptr<sf::RenderTexture> xRenderTexture1, sf::RenderWindow* GameWindow)
+void Shaders::applyAddition(sf::RenderTexture* xRenderTexture, sf::RenderTexture* xRenderTexture1, sf::RenderWindow* GameWindow)
 {
     // Create temp textures
     sf::RenderTexture tempTexture;
@@ -97,10 +103,10 @@ void Shaders::applyAddition(std::shared_ptr<sf::RenderTexture> xRenderTexture, s
     add.setUniform("bloom", xRenderTexture1->getTexture());
     add.setUniform("source", xRenderTexture->getTexture());
     tempTexture.draw(sprite, &add);
-    //tempTexture.display();
+    tempTexture.display();
     
     // Draw final result to window
     sprite.setTexture(tempTexture.getTexture());
     GameWindow->draw(sprite);
-    xRenderTexture->clear(sf::Color::Transparent);
+    xRenderTexture->clear(sf::Color::Black);
 }

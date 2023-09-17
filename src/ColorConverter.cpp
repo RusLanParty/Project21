@@ -1,4 +1,6 @@
 #include "ColorConverter.h"
+#include "Settings.h"
+#include <random>
 
 sf::Color ColorConverter::HSVtoRGB(float hue, float saturation, float value)
 {
@@ -47,6 +49,20 @@ sf::Color ColorConverter::HSVtoRGB(float hue, float saturation, float value)
     }
 
     return sf::Color(static_cast<sf::Uint8>(r * 255), static_cast<sf::Uint8>(g * 255), static_cast<sf::Uint8>(b * 255));
+}
+
+sf::Color ColorConverter::getRandomColor()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dis(0.0f, 360.0f);
+    std::uniform_real_distribution<float> dis1(0.0f, 1.0f);
+    std::uniform_real_distribution<float> dis2(0.0f, 1.0f);
+    float hue = dis(gen);
+    float sat = dis1(gen);
+    float val = dis2(gen);
+    sf::Color randCol(hue, sat, val);
+    return randCol;
 }
 
 sf::Color ColorConverter::RGBtoHSV(sf::Color color)

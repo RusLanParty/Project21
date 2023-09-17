@@ -106,15 +106,15 @@ void Player::hide()
 
 void Player::draw(sf::RenderWindow* GameWindow, sf::RenderTexture* renderTexture)
 {
-	if (Game::bloom)
-	{		
-		renderTexture->draw(player);
-		renderTexture->display();
-	}
-	else
-	{
+	//if (Game::bloom)
+	//{		
+	//	renderTexture->draw(player);
+	//	renderTexture->display();
+	//}
+	//else
+	//{
 		GameWindow->draw(player);
-	}
+	//}
 }
 
 void Player::accelerate(sf::Vector2f& acc, float deltaTime)

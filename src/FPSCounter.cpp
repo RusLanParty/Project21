@@ -47,7 +47,7 @@ void FPSCounter::displayOjbectCount(int _objCount)
 	{
 		_frameCounter1 = 0;
 		int objCount = _objCount;
-		_objectsText.setString("OBJECTS COUNT: " + std::to_string(static_cast<int>(objCount)));
+		_objectsText.setString("STARS COUNT: " + std::to_string(static_cast<int>(objCount)));
 	}
 }
 

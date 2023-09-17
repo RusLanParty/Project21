@@ -4,12 +4,12 @@
 
 EnemyFormation::EnemyFormation(std::shared_ptr<std::vector<std::vector<int>>> formationLayout) :
     _spawnT(0.0f),
-    _spawnThresh(0.05f)
+    _spawnThresh(0.02f)
 {
     const auto& layout = *formationLayout;
 
-    float spaceX = 0.6f;
-    float spaceY = 0.7f;
+    float spaceX = 0.55f;
+    float spaceY = 0.5f;
 
     // Get the conversion factor
     float conversionFactor = Settings::getConversionFactor();
@@ -57,7 +57,8 @@ void EnemyFormation::checkProjectileCollision(std::shared_ptr<Projectile> proj)
                     float hue = enemyPtr->getColor().r;
                     float sat = enemyPtr->getColor().g;
                     float val = enemyPtr->getColor().b;
-                    ParticleEffects::createSparks(proj->getPositionM(), 5.0f, hue, sat, val);
+                    ParticleEffects::createSparks(proj->getPositionM(), 5.0f, hue, 0.7f, val);
+                    ParticleEffects::createSparks(proj->getPositionM(), 5.0f);
                 }
             }
         }
@@ -78,10 +79,7 @@ void EnemyFormation::checkParticleCollision(float deltaTime)
                     if (enemyPtr->isHit(particle))
                     {
                         particle->kill();
-                        enemyPtr->applyDamage(particle->getDamage(deltaTime));                        
-
-                        // ININITE RECURSION
-                        //ParticleEffects::createSparks(particle->getPositionM(), 5.0f);
+                        enemyPtr->applyDamage(particle->getDamage(deltaTime));
                     }
                 }
             }
@@ -99,9 +97,9 @@ void EnemyFormation::updateFormation(float deltaTime, std::vector<std::shared_pt
         if (_spawnT > _spawnThresh) 
         {
             std::shared_ptr<Enemy> enemy = _spawnQue.front();
-            _spawnQue.pop();
-            enemy->flash();
             _enemies.push_back(enemy);
+            enemy->flash();
+            _spawnQue.pop();
             _spawnT = 0.0f;
 
             // Set velocity
@@ -165,20 +163,20 @@ void EnemyFormation::draw(sf::RenderWindow* GameWindow, sf::RenderTexture* rende
 {
     if (!_enemies.empty()) 
     {
-        if (Game::bloom) 
-        {
-            for (auto& enemyPtr : _enemies) 
-            {
-                enemyPtr->draw(renderTexture);
-            }
-        }
-        else 
-        {
+        //if (Game::bloom) 
+        //{
+            //for (auto& enemyPtr : _enemies) 
+           // {
+              //  enemyPtr->draw(renderTexture);
+           // }
+       // }
+       // else 
+       // {
             for (auto& enemyPtr : _enemies)
             {
                 enemyPtr->draw(GameWindow);
             }
-        }
+       // }
     }
 }
 
@@ -190,7 +188,8 @@ void EnemyFormation::despawnDead()
         if ((*it1)->isDead())
         {
             // Colorful explosion
-            ParticleEffects::createExplosion((*it1)->getPositionM(), 5.0f, (*it1)->getColor().r, (*it1)->getColor().g, (*it1)->getColor().b);
+            sf::Color color = ColorConverter::getRandomColor();
+            ParticleEffects::createExplosion((*it1)->getPositionM(), 5.0f, color.r, 0.0f, 1.0f);
             // Regular explosion
             ParticleEffects::createExplosion((*it1)->getPositionM(), 5.0f);
             (*it1).reset();

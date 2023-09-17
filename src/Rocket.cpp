@@ -13,7 +13,7 @@ Rocket::Rocket(sf::Vector2f spawnPos)
 	_projectile = std::make_shared<sf::RectangleShape>(size);
 
 	// Color
-	sf::Color color(ColorConverter::HSVtoRGB(20.0f, 1.0f, 1.0f));
+	sf::Color color(ColorConverter::HSVtoRGB(100.0f, 1.0f, 1.0f));
 	_projectile->setFillColor(color);
 	_projectile->setOrigin(_projectile->getLocalBounds().getSize().x / 2, _projectile->getLocalBounds().getSize().y / 2);
 	_projectile->setPosition(spawnPos * Settings::getConversionFactor());

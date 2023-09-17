@@ -7,14 +7,15 @@ class Menu
 {
 public:
 	static void initMenu();
-	static void menuLoop();	
+	static void menuLoop(float deltaTime);	
 	static bool isActive();	
 private:
 	static bool _active;
 	static void handleInput();
 	//static void mouse();
 	static void keyboard(sf::Event event);
-	//static void update();
+	static void update(float deltaTime);
+	static void dispose();
 	static void draw();
 	static std::vector<GameText> _texts;
 };

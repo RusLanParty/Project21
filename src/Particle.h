@@ -8,7 +8,6 @@ public:
 	void setPositionM(const sf::Vector2f position);
 	sf::Vector2f getPositionM();
 	float getRandomRadiusM();
-
 	void update(float deltaTime);
 	void kill();
 	sf::FloatRect getBounds();

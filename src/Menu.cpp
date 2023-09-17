@@ -5,17 +5,22 @@ std::vector<GameText> Menu::_texts;
 void Menu::initMenu()
 {
     // Title text
-    float offsetY = Game::GameWindow->getSize().y / 1.5;
-    sf::Vector2f titlePos(Game::GameWindow->getSize().x / 2, Game::GameWindow->getSize().y - offsetY);
-    GameText title(titlePos, "SPACE INVADERS 23", 30, sf::Color::White, Game::Font);
+    float offsetY = Game::GameWindow->getSize().y / 8;
+    sf::Vector2f titlePos(Game::GameWindow->getSize().x / 2, Game::GameWindow->getSize().y - 5 * offsetY);
+    sf::Vector2f title1Pos(Game::GameWindow->getSize().x / 2, Game::GameWindow->getSize().y - 4 * offsetY);
+    GameText title(titlePos, "UNTITLED GAME", 50, sf::Color::Cyan, Game::Font);
+    GameText title1(title1Pos, "GITHUB.COM/RUSLANPARTY", 50, sf::Color::Cyan, Game::Font);
     _texts.push_back(title);
+    _texts.push_back(title1);
+    
 }
 
-void Menu::menuLoop()
+void Menu::menuLoop(float deltaTime)
 {
     handleInput();
-    //update();
+    update(deltaTime);
     draw();
+    dispose();
 }
 
 bool Menu::isActive()
@@ -63,11 +68,20 @@ void Menu::keyboard(sf::Event event)
         }
     }
 }
+void Menu::update(float deltaTime)
+{
+    ParticleEffects::update(deltaTime);
+}
+void Menu::dispose()
+{
+    // Dispose particles
+    ParticleEffects::dispose();
+}
 void Menu::draw()
 {
     Game::GameWindow->clear(sf::Color::Black);
 
-    Game::renderTexture->setActive(true);
+   // Game::renderTexture->setActive(true);
     Game::renderTexture1->setActive(true);
 
     // Draw starfield
@@ -98,7 +112,7 @@ void Menu::draw()
     }
 
     // Reset
-    Game::renderTexture->clear(sf::Color::Black);
+    //Game::renderTexture->clear(sf::Color::Black);
     Game::renderTexture1->clear(sf::Color::Black);
     Game::renderTexture->setActive(false);
     Game::renderTexture1->setActive(false);
