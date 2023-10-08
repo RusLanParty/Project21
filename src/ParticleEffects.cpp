@@ -8,10 +8,12 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius, f
 {
 	int amount = 50;
 
+	float angleIncrement = 360.0f / static_cast<float>(amount);
+
 	for (int i = 0; i < amount; i++) 
 	{
 		// Random angle from 0 to 360
-		float angle = getRandomAngle();
+		float angle = i * angleIncrement;
 
 		// Convert the angle to radians
 		float angleRadians = angle * 3.14159265359f / 180.0f;
@@ -21,18 +23,20 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius, f
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 0.5f;		
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, hue, sat, val, lifeTime));
+		float lifeTime = 40.0f;		
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, hue, 0.0f, 1.0f, lifeTime));
 	}
 }
 void ParticleEffects::createSparks(const sf::Vector2f& position, float radius)
 {
 	int amount = 50;
 
+	float angleIncrement = 360.0f / static_cast<float>(amount);
+
 	for (int i = 0; i < amount; i++)
 	{
 		// Random angle from 0 to -180
-		float angle = getRandomAngle() / -2.0f;		
+		float angle = i * angleIncrement / -2.0f;
 
 		// Convert the angle to radians
 		float angleRadians = angle * 3.14159265359f / 180.0f;
@@ -42,14 +46,14 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius)
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 0.5f;
+		float lifeTime = 40.0f;
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, 20.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
 
 void ParticleEffects::createThrust(const sf::Vector2f& position, float radius)
 {
-	int amount = 10;
+	int amount = 20;
 
 	for (int i = 0; i < amount; i++)
 	{
@@ -61,19 +65,21 @@ void ParticleEffects::createThrust(const sf::Vector2f& position, float radius)
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 0.3f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, 20.0f, 0.5f, 1.0f, lifeTime));
+		float lifeTime = 7.0f;
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, 15.0f, 0.6f, 1.0f, lifeTime));
 	}
 }
 
 void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius)
 {
-	int amount = 150;
+	int amount = 200;
+
+	float angleIncrement = 360.0f / static_cast<float>(amount);
 
 	for (int i = 0; i < amount; i++)
 	{
 		// Random angle from 0 to 360
-		float angle = getRandomAngle();
+		float angle = i * angleIncrement;
 
 		// Convert the angle to radians
 		float angleRadians = angle * 3.14159265359f / 180.0f;
@@ -83,19 +89,21 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles				
-		float lifeTime = 0.8f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.1f, 20.0f, 0.0f, 1.0f, lifeTime));
+		float lifeTime = 200.0f;
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.05f, 30.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
 
 void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius, float hue, float sat, float val)
 {
-	int amount = 150;
+	int amount = 200;
+
+	float angleIncrement = 360.0f / static_cast<float>(amount);
 
 	for (int i = 0; i < amount; i++)
 	{
-		// Random angle from 0 to 360
-		float angle = getRandomAngle();
+		// Calculate the angle for this particle
+		float angle = i * angleIncrement;
 
 		// Convert the angle to radians
 		float angleRadians = angle * 3.14159265359f / 180.0f;
@@ -105,19 +113,21 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 0.8f;
-		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.1f, hue, sat, val, lifeTime));
+		float lifeTime = 200.0f;
+		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.05f, hue, sat, 1.0f, lifeTime));
 	}
 }
 
 void ParticleEffects::createRocketExplosion(const sf::Vector2f& position, float radius)
 {
-	int amount = 400;
+	int amount = 500;
+
+	float angleIncrement = 360.0f / static_cast<float>(amount);
 
 	for (int i = 0; i < amount; i++)
 	{
 		// Random angle from 0 to 360		
-		float angle = getRandomAngle();
+		float angle = i * angleIncrement;
 
 		// Convert the angle to radians
 		float angleRadians = angle * 3.14159265359f / 180.0f;
@@ -127,7 +137,7 @@ void ParticleEffects::createRocketExplosion(const sf::Vector2f& position, float 
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles				
-		float lifeTime = 2.0f;
+		float lifeTime = 250.0f;
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 1.0f, 30.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
@@ -211,13 +221,13 @@ float ParticleEffects::getRandomSpeed(bool highSpeedOnly)
 	std::mt19937 gen(rd());
 	if (highSpeedOnly) 
 	{
-		std::uniform_real_distribution<float> dis(15.0f, 25.0f);
+		std::uniform_real_distribution<float> dis(15.0f, 20.0f);
 		float randSpeed = dis(gen);
 		return randSpeed;;
 	}
 	else
 	{
-		std::uniform_real_distribution<float> dis(0.05f, 25.0f);
+		std::uniform_real_distribution<float> dis(0.1f, 20.0f);
 		float randSpeed = dis(gen);
 		return randSpeed;;
 	}

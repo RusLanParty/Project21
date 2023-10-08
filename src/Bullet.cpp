@@ -8,7 +8,7 @@ Bullet::Bullet(sf::Vector2f spawnPos)
 	_damage = 20.0f;
 	_velocity.x = 0.0f;
 	_velocity.y = -15.0f;
-	sf::Vector2f size(0.05f * Settings::getConversionFactor(), 0.2f * Settings::getConversionFactor());
+	sf::Vector2f size(0.05f * Settings::getConversionFactor(), 0.1f * Settings::getConversionFactor());
 	_projectile = std::make_shared<sf::RectangleShape>(size);
 
 	// Color

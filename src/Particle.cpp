@@ -8,13 +8,16 @@
 #endif
 
 Particle::Particle(const sf::Vector2f& position, const sf::Vector2f& velocity, float damage, float hue, float sat, float val, float lifeTime) :
-	_lifeTime(lifeTime)
+	_lifeTime(lifeTime),
+	_dyingSpeed(1.0f / _lifeTime),
+	_hue(hue),
+	_sat(sat),
+	_val(val),
+	_damage(damage)
 {	
 	// Random radius
 	float radius = getRandomRadiusM();
 
-	// Damage
-	this->_damage = damage;
 
 	// Create shape
 	this->_particle.setRadius(radius);
@@ -22,11 +25,6 @@ Particle::Particle(const sf::Vector2f& position, const sf::Vector2f& velocity, f
 	// Set point count
 	this->_particle.setPointCount(4);
 	
-	// Set color
-	this->_hue = hue;
-	this->_sat = sat;
-	this->_val = val;
-
 	// Set position
 	this->setPositionM(position);
 
@@ -46,28 +44,28 @@ sf::Vector2f Particle::getPositionM()
 
 void Particle::update(float deltaTime)
 {	
+	sf::Vector2f currentVelocity = this->_velocity;
+	float currentSpeed = std::sqrt(this->_velocity.x * this->_velocity.x + this->_velocity.y * this->_velocity.y);
+
 	// Update position
 	sf::Vector2f newPos(this->getPositionM() + this->_velocity * deltaTime);
 	this->setPositionM(newPos);
 
 	// Update lifetime and opacity
-	float delta = std::sqrt(this->_velocity.x * this->_velocity.x + this->_velocity.y * this->_velocity.y);
-	this->_lifeTime -= (deltaTime / 8) + (delta / 300);
-	this->_val = _lifeTime * 3.0f;
+	this->_lifeTime= _lifeTime - 1 - currentSpeed / 16;
+	this->_val -= _dyingSpeed;
 
 	// Decrease velocity
-	float minSpeed = 0.001f * Settings::getConversionFactor();
-	float decayFactor = 0.01f * Settings::getConversionFactor(); 
-	sf::Vector2f currentVelocity = this->_velocity;
-	float currentSpeed = delta;
-
-	if (currentSpeed > minSpeed) 
+	float minSpeed = 0.1f * Settings::getConversionFactor();
+	float decayFactor = 0.99f;  
+		
+	if (currentSpeed > minSpeed)
 	{
-		this->_velocity *= std::pow(decayFactor, deltaTime);
-	}	
+		this->_velocity *= decayFactor;
+	}
 
 	// Particle radius decrease		
-	float newRadius = this->_particle.getRadius() - (0.04f * Settings::getConversionFactor() * deltaTime) - (0.01f * Settings::getConversionFactor() * delta * deltaTime);
+	float newRadius = this->_particle.getRadius() - (0.01f * Settings::getConversionFactor() * deltaTime) - (0.025f * currentSpeed);
 	if (newRadius < 0.01f * Settings::getConversionFactor())
 	{
 		newRadius = 0.01f * Settings::getConversionFactor();
@@ -81,7 +79,7 @@ void Particle::update(float deltaTime)
 	// Increase saturation
 	if (this->_sat < 0.7f)
 	{
-		_sat += (delta * 2) * deltaTime;		
+		_sat += (currentSpeed) * deltaTime;		
 	}
 
 	// Clamp value

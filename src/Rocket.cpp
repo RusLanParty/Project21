@@ -9,7 +9,7 @@ Rocket::Rocket(sf::Vector2f spawnPos)
 	_damage = 50.0f;
 	_velocity.x = 0.0f;
 	_velocity.y = -30.0f;
-	sf::Vector2f size(0.1f * Settings::getConversionFactor(), 0.25f * Settings::getConversionFactor());
+	sf::Vector2f size(0.1f * Settings::getConversionFactor(), 0.2f * Settings::getConversionFactor());
 	_projectile = std::make_shared<sf::RectangleShape>(size);
 
 	// Color

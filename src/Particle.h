@@ -22,4 +22,5 @@ private:
 	float _sat;
 	float _val;
 	float _damage;
+	float _dyingSpeed;
 };
