@@ -23,7 +23,7 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius, f
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 40.0f;		
+		float lifeTime = 60.0f;		
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, hue, 0.0f, 1.0f, lifeTime));
 	}
 }
@@ -46,7 +46,7 @@ void ParticleEffects::createSparks(const sf::Vector2f& position, float radius)
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 40.0f;
+		float lifeTime = 60.0f;
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.0f, 20.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
@@ -89,7 +89,7 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles				
-		float lifeTime = 200.0f;
+		float lifeTime = 100.0f;
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.05f, 30.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
@@ -113,7 +113,7 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles
-		float lifeTime = 200.0f;
+		float lifeTime = 100.0f;
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 0.05f, hue, sat, 1.0f, lifeTime));
 	}
 }
@@ -137,7 +137,7 @@ void ParticleEffects::createRocketExplosion(const sf::Vector2f& position, float 
 		sf::Vector2f velocity(std::cos(angleRadians) * speed, std::sin(angleRadians) * speed);
 
 		// Add to _particles				
-		float lifeTime = 250.0f;
+		float lifeTime = 200.0f;
 		_particles.emplace_back(std::make_shared<Particle>(position, velocity, 1.0f, 30.0f, 0.0f, 1.0f, lifeTime));
 	}
 }
@@ -227,7 +227,7 @@ float ParticleEffects::getRandomSpeed(bool highSpeedOnly)
 	}
 	else
 	{
-		std::uniform_real_distribution<float> dis(0.1f, 20.0f);
+		std::uniform_real_distribution<float> dis(0.01f, 20.0f);
 		float randSpeed = dis(gen);
 		return randSpeed;;
 	}

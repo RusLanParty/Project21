@@ -8,8 +8,7 @@
 #endif
 
 Particle::Particle(const sf::Vector2f& position, const sf::Vector2f& velocity, float damage, float hue, float sat, float val, float lifeTime) :
-	_lifeTime(lifeTime),
-	_dyingSpeed(1.0f / _lifeTime),
+	_lifeTime(lifeTime),	
 	_hue(hue),
 	_sat(sat),
 	_val(val),
@@ -52,11 +51,11 @@ void Particle::update(float deltaTime)
 	this->setPositionM(newPos);
 
 	// Update lifetime and opacity
-	this->_lifeTime= _lifeTime - 1 - currentSpeed / 16;
-	this->_val -= _dyingSpeed;
+	this->_lifeTime= _lifeTime - 0.7 - currentSpeed / 8;	
+	this->_val -= 0.0f;
 
 	// Decrease velocity
-	float minSpeed = 0.1f * Settings::getConversionFactor();
+	float minSpeed = 0.01f * Settings::getConversionFactor();
 	float decayFactor = 0.99f;  
 		
 	if (currentSpeed > minSpeed)
@@ -70,9 +69,9 @@ void Particle::update(float deltaTime)
 	{
 		newRadius = 0.01f * Settings::getConversionFactor();
 	}
-	else if (newRadius > 0.08f * Settings::getConversionFactor())
+	else if (newRadius > 0.18f * Settings::getConversionFactor())
 	{
-		newRadius = 0.08f * Settings::getConversionFactor();
+		newRadius = 0.18f * Settings::getConversionFactor();
 	}
 	this->_particle.setRadius(newRadius);
 
@@ -80,6 +79,11 @@ void Particle::update(float deltaTime)
 	if (this->_sat < 0.7f)
 	{
 		_sat += (currentSpeed) * deltaTime;		
+	}
+
+	if (this->_hue > 0.0f) 
+	{
+		this->_hue -= 2.0f;
 	}
 
 	// Clamp value
@@ -143,7 +147,7 @@ float Particle::getRandomRadiusM()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.01f * Settings::getConversionFactor(), 0.09f * Settings::getConversionFactor());
+	std::uniform_real_distribution<float> dis(0.01f * Settings::getConversionFactor(), 0.9f * Settings::getConversionFactor());
 	float randRad = dis(gen);
 	return randRad;
 }
