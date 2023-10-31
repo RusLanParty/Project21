@@ -21,5 +21,6 @@ private:
 	float _hue;
 	float _sat;
 	float _val;
-	float _damage;	
+	float _damage;
+	float _deathSpeed;
 };

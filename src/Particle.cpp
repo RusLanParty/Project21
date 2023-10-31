@@ -12,7 +12,8 @@ Particle::Particle(const sf::Vector2f& position, const sf::Vector2f& velocity, f
 	_hue(hue),
 	_sat(sat),
 	_val(val),
-	_damage(damage)
+	_damage(damage),
+	_deathSpeed(1 / lifeTime)
 {	
 	// Random radius
 	float radius = getRandomRadiusM();
@@ -51,8 +52,8 @@ void Particle::update(float deltaTime)
 	this->setPositionM(newPos);
 
 	// Update lifetime and opacity
-	this->_lifeTime= _lifeTime - 0.7 - currentSpeed / 8;	
-	this->_val -= 0.0f;
+	this->_lifeTime -= 1;	
+	this->_val -= _deathSpeed;
 
 	// Decrease velocity
 	float minSpeed = 0.01f * Settings::getConversionFactor();
@@ -64,7 +65,7 @@ void Particle::update(float deltaTime)
 	}
 
 	// Particle radius decrease		
-	float newRadius = this->_particle.getRadius() - (0.01f * Settings::getConversionFactor() * deltaTime) - (0.025f * currentSpeed);
+	float newRadius = this->_particle.getRadius() - (0.01f * Settings::getConversionFactor() * deltaTime) - (0.035f * currentSpeed);
 	if (newRadius < 0.01f * Settings::getConversionFactor())
 	{
 		newRadius = 0.01f * Settings::getConversionFactor();
@@ -147,7 +148,7 @@ float Particle::getRandomRadiusM()
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(0.01f * Settings::getConversionFactor(), 0.9f * Settings::getConversionFactor());
+	std::uniform_real_distribution<float> dis(0.02f * Settings::getConversionFactor(), 0.08f * Settings::getConversionFactor());
 	float randRad = dis(gen);
 	return randRad;
 }

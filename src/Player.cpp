@@ -28,7 +28,7 @@ void Player::load(std::shared_ptr<sf::Vector2f> spawnPos)
 		std::cout << "PLAYER: PLAYER.PNG - SUCCESS" << "\n";
 	}
 	player.setTexture(playerTexture);
-	player.setRotation(270.0f);
+	player.setRotation(0.0f);
 	player.setScale(0.3f, 0.3f);
 	player.setOrigin(player.getLocalBounds().getSize().x / 2, player.getLocalBounds().getSize().y / 2);
 	player.setPosition(*spawnPos);	
@@ -66,7 +66,7 @@ void Player::updateMovement(float deltaTime)
 	acceleration.x = 0.0f;
 
 	// Create thrust particles
-	sf::Vector2f engine1(getPositionM().x - 0.35f, getPositionM().y + 1.1f);
+	sf::Vector2f engine1(getPositionM().x - 0.45f, getPositionM().y + 1.1f);
 	sf::Vector2f engine2(getPositionM().x + 0.25f, getPositionM().y + 1.1f);
 	ParticleEffects::createThrust(engine1, 5.0f);
 	ParticleEffects::createThrust(engine2, 5.0f);
