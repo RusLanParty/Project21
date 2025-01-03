@@ -120,7 +120,7 @@ void ParticleEffects::createExplosion(const sf::Vector2f& position, float radius
 
 void ParticleEffects::createRocketExplosion(const sf::Vector2f& position, float radius)
 {
-	int amount = 500;
+	int amount = 650;
 
 	float angleIncrement = 360.0f / static_cast<float>(amount);
 

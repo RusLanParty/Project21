@@ -1,7 +1,7 @@
 #include "Starfield.h"
 #include <iostream>
 #include <random>
-uint32_t Starfield::_starsCount = 2500;
+uint32_t Starfield::_starsCount = 1000;
 std::vector<Star> Starfield::_starfield;
 
 void Starfield::draw(sf::RenderWindow* GameWindow,sf::RenderTexture* renderTexture)
